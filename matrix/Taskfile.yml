@@ -21,3 +21,13 @@ tasks:
     desc: run the test
     cmds:
       - go test -cover -race ./...
+
+  server:
+    desc: run the server
+    cmds:
+      - go run cmd/server/main.go
+
+  client:
+    desc: run the client
+    cmds:
+      - go run cmd/client/main.go

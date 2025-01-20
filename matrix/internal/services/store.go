@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	"matrix/internal/pb"
 	"sync"
 
@@ -10,12 +11,13 @@ import (
 type (
 	LaptopStore interface {
 		Save(laptop *pb.Laptop) error
+		Find(id string) (*pb.Laptop, error)
 	}
 )
 
 type (
 	InMemoryLaptopStore struct {
-		mutax sync.RWMutex
+		mutex sync.RWMutex
 		data  map[string]*pb.Laptop
 	}
 )
@@ -27,8 +29,8 @@ func NewInMemoryLaptopStore() *InMemoryLaptopStore {
 }
 
 func (store *InMemoryLaptopStore) Save(lp *pb.Laptop) error {
-	store.mutax.Lock()
-	defer store.mutax.Unlock()
+	store.mutex.Lock()
+	defer store.mutex.Unlock()
 
 	if store.data[lp.Id] != nil {
 		return ErrAlreadyExists
@@ -43,4 +45,27 @@ func (store *InMemoryLaptopStore) Save(lp *pb.Laptop) error {
 	store.data[o.Id] = o
 
 	return nil
+}
+
+func (store *InMemoryLaptopStore) Find(id string) (*pb.Laptop, error) {
+	store.mutex.RLock()
+	defer store.mutex.RUnlock()
+
+	laptop := store.data[id]
+	if laptop == nil {
+		return nil, nil
+	}
+
+	return deep_copy(laptop)
+}
+
+func deep_copy(laptop *pb.Laptop) (*pb.Laptop, error) {
+	other := &pb.Laptop{}
+
+	err := copier.Copy(other, laptop)
+	if err != nil {
+		return nil, fmt.Errorf("cannot copy laptop data: %w", err)
+	}
+
+	return other, nil
 }

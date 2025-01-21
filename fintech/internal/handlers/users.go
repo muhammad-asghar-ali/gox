@@ -28,12 +28,8 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	err = json.Unmarshal(body, req)
 	helpers.HandleError(err)
 
-	login := services.Login(req.Username, req.Password)
+	login, err := services.Login(req.Username, req.Password)
+	helpers.HandleError(err)
 
-	if login["success"] == true {
-		resp := login
-		json.NewEncoder(w).Encode(resp)
-	} else {
-
-	}
+	json.NewEncoder(w).Encode(login)
 }

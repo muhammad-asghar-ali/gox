@@ -6,7 +6,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 )
 
-func GenerateToken(userID uint) (string, error) {
+func GenerateToken(userID uint) (*string, error) {
 	token_c := jwt.MapClaims{
 		"user_id": userID,
 		"expiry":  time.Now().Add(time.Minute * 60).Unix(),
@@ -15,8 +15,8 @@ func GenerateToken(userID uint) (string, error) {
 	token_jwt := jwt.NewWithClaims(jwt.GetSigningMethod("256"), token_c)
 	token, err := token_jwt.SignedString([]byte("TokenPassword"))
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return token, nil
+	return &token, nil
 }

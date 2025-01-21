@@ -1,9 +1,16 @@
 package main
 
 import (
-	"github.com/muhammad-asghar-ali/go/fintech/internal/migrations"
+	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/muhammad-asghar-ali/go/fintech/internal/routes"
 )
 
 func main() {
-	migrations.Migrate()
+	r := routes.StartApi()
+
+	fmt.Println("App is running on port :8888")
+	log.Fatal(http.ListenAndServe(":8888", r))
 }

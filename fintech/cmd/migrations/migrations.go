@@ -1,25 +1,14 @@
-package migrations
+package main
 
 import (
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
 	"github.com/muhammad-asghar-ali/go/fintech/internal/helpers"
 	"github.com/muhammad-asghar-ali/go/fintech/internal/models"
 )
 
-// TODO - to singleton
-func connect() *gorm.DB {
-	db, err := gorm.Open("postgres", "host=localhost port=5432 user=user dbname=dbname password=password sslmode=disable")
-	helpers.HandleError(err)
-
-	return db
-}
-
-// test account
-// TODO - figure out some way
 func createAccounts() {
-	db := connect()
+	db := helpers.ConnectDB()
 
 	users := [2]models.User{
 		{Username: "John", Email: "john@john.com"},
@@ -47,8 +36,8 @@ func createAccounts() {
 	defer db.Close()
 }
 
-func Migrate() {
-	db := connect()
+func main() {
+	db := helpers.ConnectDB()
 	db.AutoMigrate(&models.User{}, &models.Account{})
 	defer db.Close()
 

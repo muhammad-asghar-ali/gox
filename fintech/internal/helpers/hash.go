@@ -11,3 +11,11 @@ func HashAndSalt(pass []byte) string {
 
 	return string(hashed)
 }
+
+func ComparePassword(pass, hash string) error {
+	if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(pass)); err != nil {
+		return err
+	}
+
+	return nil
+}

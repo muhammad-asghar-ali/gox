@@ -27,8 +27,8 @@ func Login(username string, pass string) (*LoginResponse, error) {
 		}, err
 	}
 
-	account := models.ResponseAccount{}
-	accounts := account.UserAccounts(user.ID)
+	a := models.Account{}
+	accounts := a.UserAccounts(user.ID)
 
 	res := &models.ResponseUser{
 		ID:       user.ID,

@@ -23,36 +23,31 @@ type (
 		UserID  uint
 	}
 
-	ResponseAccount struct {
-		ID      uint
-		Name    string
-		Balance int
-	}
-
 	ResponseUser struct {
 		ID       uint
 		Username string
 		Email    string
-		Accounts []*ResponseAccount
+		Accounts []*Account
 	}
 )
 
 func (u *User) CheckUser(username string) error {
-	db := helpers.ConnectDB()
-	defer db.Close()
+	db := helpers.GetDatabase()
+	// defer db.Close()
 
-	if db.Where("username = ? ", username).First(u).RecordNotFound() {
+	if db.Where("username = ? ", username).First(&u).RecordNotFound() {
 		return errors.New("user not found")
 	}
 
 	return nil
 }
 
-func (ra *ResponseAccount) UserAccounts(userID uint) []*ResponseAccount {
-	db := helpers.ConnectDB()
-	defer db.Close()
+func (a *Account) UserAccounts(userID uint) []*Account {
+	db := helpers.GetDatabase()
+	// defer db.Close()
 
-	accounts := make([]*ResponseAccount, 0)
-	db.Table("accounts").Select("id", "name", "balance").Where("user_id = ?", userID).Scan(accounts)
+	accounts := make([]*Account, 0)
+	db.Table("accounts").Where("user_id = ?", userID).Find(&accounts)
+
 	return accounts
 }

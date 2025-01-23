@@ -8,7 +8,7 @@ import (
 )
 
 func createAccounts() {
-	db := helpers.ConnectDB()
+	db := helpers.GetDatabase()
 
 	users := [2]models.User{
 		{Username: "John", Email: "john@john.com"},
@@ -37,7 +37,7 @@ func createAccounts() {
 }
 
 func main() {
-	db := helpers.ConnectDB()
+	db := helpers.GetDatabase()
 	db.AutoMigrate(&models.User{}, &models.Account{})
 	defer db.Close()
 

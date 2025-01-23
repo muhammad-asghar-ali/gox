@@ -11,12 +11,12 @@ import (
 
 type (
 	LoginRequest struct {
-		Username string
-		Password string
+		Username string `json:"username"`
+		Password string `json:"password"`
 	}
 
 	ErrResponse struct {
-		Message string
+		Message string `json:"message"`
 	}
 )
 

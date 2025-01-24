@@ -59,5 +59,33 @@
       - **Cache Layer:** single node, depending on the load and cache hit ratio.
 
 3. **High Level Design:**
+
    On a high level, we would need following components in our design:
+
+   - **Load Balancer:** Distributes incoming requests across multiple application servers.
+   - **Application Servers:** Handles incoming requests for shortening URLs and redirecting users and analytics (optional).
+   - **Database:** Stores mappings between short URLs and long URLs.
+   - **Cache:** Stores frequently accessed URL mappings for faster retrieval.
+
+   NOTE: we can split the services to write and read sperate services.
+
    ![Design](shortly.png)
+
+4. **Database Design:**
+
+   1. **SQL vs NoSQL:**
+      To choose right database we need to understand our need. Let consider some factors:
+      - We need to store billion records.
+      - Read queries are much higher then the write.
+      - We don't need joins.
+      - Highly scalable and available.
+
+   Given these points, a NoSQL database like MongoDB, Cassandra are better option due to their ability to efficiently handle billions.
+
+5. **Schema Design:**
+   In inital stage we need only two tables which are store data. One is to store the user related database and the other table store the information about url.
+
+   1. users
+   2. url_store
+
+   ![Database Design](database_design.png)

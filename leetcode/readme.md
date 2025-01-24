@@ -11,3 +11,6 @@
 
 4. Palindrome Number
    To run code and verify the test cases run the cmd `go run palindrome_number.go`
+
+5. Longest Common Prefix
+   To run code and verify the test cases run the cmd `go run longest_common_prefix.go`

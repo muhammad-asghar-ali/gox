@@ -173,3 +173,23 @@
             "refresh_token": "refresh_token"
           }
           ```
+
+6.  **Key Components:**
+
+    1. **URL Generator Service:** A function which generate the short, unique url for give long url by user.
+       Here are some point which the shorten url algorithm work:
+
+       - We need to ensure that the short codes are unique.
+       - We want the short codes to be as short as possible
+       - We want to ensure codes are efficiently generated.
+
+         Let's compare view possible ways to achieve this functionality.
+
+         - **Long URL Prefix or Postfix:** We can use the short url key from the entered long user by the user via a function, which take a prefix (7 characters) or postfix also (7 characters) from the url string and save in database.
+
+           - PROS and CONS:
+             - Easy to implement the logic.
+             - Not meet constraint #1 about uniqueness.
+             - Two or more short url have the same prefix or postfix.
+
+         - **Random Number Generator or Hash function:**

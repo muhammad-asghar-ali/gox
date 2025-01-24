@@ -21,16 +21,21 @@
 2.  **Capacity Estimation:**
 
     1. **Assumptions:**
+
        - **Daily requests per day to short urls** ~ 1000000.
        - **Read and Write ratio:** 100:1 (for every URL creation, we expect 100 redirects).
        - **Peak Traffic:** 10x of the average load.
        - **Orignal Url length:** 100 characters.
+
     2. **Throughput Requirements:**
+
        - **Average write per second (WPS):** (1,000,000 requests / 24 \* 60 \* 60 seconds) ~ 12
        - **Peak WPS:** 12 \* 10 = 120
        - **Average read per second (RPS):** 12 \* 100 = 1200
        - **Peal RPS:** 10 \* 1200 = 12000
+
     3. **Storage Estimation:**
+
        - We need the following informations for each URL.
          - **Short URL:** 7 characters
          - **Long URL:** 100 characters
@@ -43,16 +48,21 @@
          - Stroage for one year:
            - **Total URLs per Year:** 1,000,000 × 365 = 365,000,000
            - **Total Storage per Year:** 365,000,000 × 135 bytes ~ 48 GB
+
     4. **Bandwidth Estimation:** (optional)
        Assuming the HTTP 301 redirect response size is about 500 bytes (includes headers and the short URL).
+
        - **Total Read Bandwidth per Day:** 10000000 \* 100 \* 500 bytes = 50 GB / day
        - **Peak Bandwidth:** 500 bytes × 12,000 RPS = 6 MB/s (the peak bandwidth could be as high average).
+
     5. **Caching Estimation:**
+
        - The system is ead heavy so using cache can reduce the latency for read requests.
        - Can cache hot URLs, can identify the URLs where 20% of the URLs generate 80% of the read traffic.
        - 1 million writes per day, and cache only 20%, so the formula will be:
          - 1M \* 0.2 \* 135 Bytes ~ 26M
          - Cache hit ratio: 90:10
+
     6. **Infrastructure Sizing:**
        - **API Servers:** start with 1-2 instances each capabile of 200 to 300 RPS.
        - **Database:** single database node to handle both storage and high read/write throughput.

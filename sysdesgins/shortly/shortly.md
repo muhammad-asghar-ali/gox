@@ -94,8 +94,7 @@
     Design RESTful APIs that are efficient and scalable. We need following API implement the basic CRUD on urls and also provide the user registration and login endpoints. Here are the LIST of APIs needed to achieve the core functionality of a system.
 
     1.  **URL Shortening:**
-        **Endpoint: POST ->** `/api/v1/shorten`
-        We can make access the user with and without onboarding to the system.
+        **Endpoint: POST ->** `/api/v1/shorten`: We can make access the user with and without onboarding to the system.
 
         - Sample Request body:
 
@@ -118,13 +117,13 @@
     2.  **URL Redirection API:**
         **Endpoint: GET ->** `/api/v1/{short_url_key}`
 
-        ```json
-           HTTP 302 Redirect to the original long URL
-        ```
+        - Sample Response
+
+          HTTP/1.1 302 Found
+          Location: https://www.example.com/some/very/long/url
 
     3.  **User Registration:** (optional)
-        **Endpoint: POST ->** `/api/v1/register`
-        Onboard the user to the system
+        **Endpoint: POST ->** `/api/v1/register`: Onboard the user to the system
 
         - Sample Request body:
 
@@ -145,8 +144,7 @@
           ```
 
     4.  **User Login:** (optional)
-        **Endpoint: POST ->** `/api/v1/login`
-        Give access user to the system.
+        **Endpoint: POST ->** `/api/v1/login`: Give access user to the system.
 
         - Sample Request body:
 

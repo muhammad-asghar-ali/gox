@@ -6,5 +6,8 @@
 2. Two Sum
    To run code and verify the test cases run the cmd `go run two_sum.go`
 
-3. Two Sum
+3. Roman to Int
    To run code and verify the test cases run the cmd `go run roman_to_int.go`
+
+4. Palindrome Number
+   To run code and verify the test cases run the cmd `go run palindrome_number.go`

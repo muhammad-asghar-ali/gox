@@ -176,7 +176,7 @@
 
 6.  **Key Components:**
 
-    1. **URL Generator Service:** A function which generate the short, unique url for give long url by user.
+    1. **URL Generator:** A function which generate the short, unique url for give long url by user.
        Here are some point which the shorten url algorithm work:
 
        - We need to ensure that the short codes are unique.
@@ -210,3 +210,9 @@
              - Supports a massive number of URLs (e.g., 6 characters can encode up to 62^7 over 3.5 trillion).
              - Synchronizing a global counter across multiple servers can be challenging in distributed environments.
              - If a URL is shortened multiple times, each instance gets a new code, leading to duplicates in some cases.
+
+    2. **Link Expiration:**
+
+    3. **URL Redirection:**
+
+    4. **Analytics (optional):**

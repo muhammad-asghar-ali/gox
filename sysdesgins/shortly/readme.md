@@ -1,5 +1,7 @@
 # Design a URL Shortener - shortly
 
+Shortly is a URL shortening service that converts long URLs into shorter, manageable links. It also provides analytics for the shortened URLs.
+
 1.  **Requirements:**
 
     1. **Functional Requirements:**

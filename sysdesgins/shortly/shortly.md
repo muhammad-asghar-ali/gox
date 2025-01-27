@@ -192,4 +192,21 @@
              - Not meet constraint #1 about uniqueness.
              - Two or more short url have the same prefix or postfix.
 
-         - **Random Number Generator or Hash function:**
+         - **Random Number Generator or Hash function:** An other approach is to generate the Random number and which could be used as the short code for url. Additionally, we can check the generated number in database and if it exist create the new. This approach make the query slow.
+           Alternatively, we could use the hash function with fixed-size hash code. The both approaches use the base64 format, compact representation of numbers that uses 62 characters (a-z, A-Z, 0-9).
+
+           - PROS and CONS:
+             - Batter approach when the size of url records are not increases that much.
+             - We can generate a short code without requiring any knowledge of the URL being shortened.
+             - Easy to implement.
+             - Duplicate short codes, especially as the number of stored URLs increases.
+             - Detecting and resolving collisions requires additional database checks for each new code, adding latency and complexity to the system.
+
+         - **Counter with base64 Encoding:** Using a global counter with Redis ensures unique, collision-free short codes by atomically incrementing the counter. The counter's value is Base62-encoded, creating compact, scalable, and efficient URL identifiers.
+
+           - PROS and CONS:
+             - Each counter value is unique, eliminating the risk of collisions without additional checks.
+             - Base62 encoding keeps short codes concise, even for large numbers (e.g., 1 billion URLs = 6 characters).
+             - Supports a massive number of URLs (e.g., 6 characters can encode up to 62^7 over 3.5 trillion).
+             - Synchronizing a global counter across multiple servers can be challenging in distributed environments.
+             - If a URL is shortened multiple times, each instance gets a new code, leading to duplicates in some cases.

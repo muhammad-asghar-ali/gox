@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
+
 	"github.com/muhammad-asghar-ali/go/sysdesigns/shortly/internal/models"
 	"github.com/muhammad-asghar-ali/go/sysdesigns/shortly/internal/utils"
 )
@@ -38,7 +39,7 @@ func (ush *UrlStoreHanlder) Shorten(w http.ResponseWriter, r *http.Request, _ ht
 	}
 
 	u := &models.UrlStore{
-		ShortUrl:       utils.GenerateShortURL(req.LongUrl),
+		ShortUrl:       utils.GenerateShortURLFromCounter(),
 		LongUrl:        req.LongUrl,
 		ExpirationDate: expiration,
 		UserID:         "",

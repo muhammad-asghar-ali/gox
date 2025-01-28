@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 	"sync"
 
 	"github.com/joho/godotenv"
@@ -17,6 +18,12 @@ type (
 		Password     string
 	}
 
+	Redis struct {
+		RedisAddr     string
+		RedisPassword string
+		RedisDB       int
+	}
+
 	Server struct {
 		Port string
 	}
@@ -24,6 +31,7 @@ type (
 	Config struct {
 		Server   Server
 		Database Database
+		Redis    Redis
 	}
 )
 
@@ -46,6 +54,12 @@ func Load() *Config {
 			Password:     os.Getenv("DATABASE_PASSWORD"),
 		}
 
+		redis := Redis{
+			RedisAddr:     os.Getenv("REDIS_ADDR"),
+			RedisPassword: os.Getenv("REDIS_PASSWORD"),
+			RedisDB:       getRedisDB(),
+		}
+
 		server := Server{
 			Port: os.Getenv("PORT"),
 		}
@@ -53,6 +67,7 @@ func Load() *Config {
 		instance = &Config{
 			Database: database,
 			Server:   server,
+			Redis:    redis,
 		}
 	})
 
@@ -85,4 +100,30 @@ func (c *Config) GetConnectionURL() string {
 		instance.Database.Password,
 		instance.Database.DatabaseName,
 	)
+}
+
+func (c *Config) GetRedisAddr() string {
+	return c.Redis.RedisAddr
+}
+
+func (c *Config) GetRedisPassword() string {
+	return c.Redis.RedisPassword
+}
+
+func (c *Config) GetRedisDB() int {
+	return c.Redis.RedisDB
+}
+
+func getRedisDB() int {
+	db := os.Getenv("REDIS_DB")
+	if db == "" {
+		return 0
+	}
+
+	value, err := strconv.Atoi(db)
+	if err != nil {
+		log.Fatalf("Invalid REDIS_DB value: %v", err)
+	}
+
+	return value
 }

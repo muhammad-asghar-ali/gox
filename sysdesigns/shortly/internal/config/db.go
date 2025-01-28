@@ -14,12 +14,13 @@ var (
 	oc     sync.Once
 )
 
-func InitDB() *mongo.Client {
+func Connect() *mongo.Client {
 	oc.Do(func() {
-		mongoURI := GetConfig().GetURI()
+		mongoURI := GetConfig().GetConnectionURL()
 		clientOptions := options.Client().ApplyURI(mongoURI)
 
-		client, err := mongo.Connect(context.Background(), clientOptions)
+		var err error
+		client, err = mongo.Connect(context.Background(), clientOptions)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -35,10 +36,16 @@ func InitDB() *mongo.Client {
 
 func GetDatabase() *mongo.Client {
 	if client == nil {
-		InitDB()
+		client = Connect()
 	}
 
 	return client
+}
+
+func Close(client *mongo.Client) {
+	if err := client.Disconnect(context.Background()); err != nil {
+		log.Fatalf("Failed to disconnect MongoDB client: %v", err)
+	}
 }
 
 func GetUserCollection(client *mongo.Client) *mongo.Collection {

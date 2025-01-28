@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"sync"
@@ -76,4 +77,12 @@ func (c *Config) GetURI() string {
 
 func (c *Config) GetPort() string {
 	return instance.Server.Port
+}
+
+func (c *Config) GetConnectionURL() string {
+	return fmt.Sprintf("mongodb://%s:%s@localhost/%s?authSource=admin",
+		instance.Database.Username,
+		instance.Database.Password,
+		instance.Database.DatabaseName,
+	)
 }

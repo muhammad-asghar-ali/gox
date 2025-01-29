@@ -45,9 +45,9 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
          - **ExpirationDate:** 8 bytes (timestamp)
          - **ClickCount:** 4 bytes (integer)
          - **UserID:** 8 bytes.
-       - Total stroage:
+       - Total storage:
          - **Storage per URL:** 7 + 100 + 8 + 8 + 4 + 8 = 135 bytes
-         - Stroage for one year:
+         - storage for one year:
            - **Total URLs per Year:** 1,000,000 × 365 = 365,000,000
            - **Total Storage per Year:** 365,000,000 × 135 bytes ~ 48 GB
 

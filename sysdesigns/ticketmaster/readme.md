@@ -31,24 +31,24 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
        - The system should be tested and east to deploy.
        - The system should have regular backups.
 
-2.  **Capacity Estimation:**
+2.  **Assumptions:**
 
-    1. **Assumptions:**
+3.  **Capacity Estimation:**
 
-    2. **Throughput Requirements:**
+    1. **Throughput Requirements:**
 
-    3. **Storage Estimation:**
+    2. **Storage Estimation:**
 
-    4. **Bandwidth Estimation:** (optional)
+    3. **Bandwidth Estimation:** (optional)
 
-    5. **Caching Estimation:**
+    4. **Caching Estimation:**
 
-    6. **Infrastructure Sizing:**
+    5. **Infrastructure Sizing:**
 
-3.  **High Level Design:**
+4.  **High Level Design:**
 
-4.  **Database Design:**
+5.  **Database Design:**
 
-5.  **System API Design:**
+6.  **System API Design:**
 
-6.  **Key Components:**
+7.  **Deep Dive:**

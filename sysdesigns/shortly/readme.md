@@ -15,19 +15,20 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
        - May save the user information (optional).
 
     2. **Non Functional Requirements:**
+
        - High availability (the service should up like 99.9% time).
        - Low latency (redirect to url should heppen in ms).
        - Scalability (the system handle 1M records per day).
        - Security to prevent malicious use, such as phishing.
 
-2.  **Capacity Estimation:**
+2.  **Assumptions:**
 
-    1. **Assumptions:**
+    - **Daily requests per day to short urls** ~ 1000000.
+    - **Read and Write ratio:** 100:1 (for every URL creation, we expect 100 redirects).
+    - **Peak Traffic:** 10x of the average load.
+    - **Orignal Url length:** 100 characters.
 
-       - **Daily requests per day to short urls** ~ 1000000.
-       - **Read and Write ratio:** 100:1 (for every URL creation, we expect 100 redirects).
-       - **Peak Traffic:** 10x of the average load.
-       - **Orignal Url length:** 100 characters.
+3.  **Capacity Estimation:**
 
     2. **Throughput Requirements:**
 
@@ -70,7 +71,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
        - **Database:** single database node to handle both storage and high read/write throughput.
        - **Cache Layer:** single node, depending on the load and cache hit ratio.
 
-3.  **High Level Design:**
+4.  **High Level Design:**
 
     On a high level, we would need following components in our design:
 
@@ -83,7 +84,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
     ![Design](shortly.png)
 
-4.  **Database Design:**
+5.  **Database Design:**
 
     1. **SQL vs NoSQL:**
        To choose right database we need to understand our need. Let consider some factors:
@@ -102,7 +103,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
        ![Database Design](database_design.png)
 
-5.  **System API Design:**
+6.  **System API Design:**
     Design RESTful APIs that are efficient and scalable. We need following API implement the basic CRUD on urls and also provide the user registration and login endpoints. Here are the LIST of APIs needed to achieve the core functionality of a system.
 
     1.  **URL Shortening:**
@@ -176,7 +177,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
           }
           ```
 
-6.  **Key Components:**
+7.  **Deep Dive:**
 
     1. **URL Generator:** A function which generate the short, unique url for give long url by user.
        Here are some point which the shorten url algorithm work:

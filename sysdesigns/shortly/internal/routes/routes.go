@@ -12,5 +12,5 @@ func RegisterRoutes(router *httprouter.Router) {
 
 	router.GET("/api/v1/health", h.Health)
 	router.POST("/api/v1/shorten", us.Shorten)
-	router.GET("/api/v1/{code}", us.Redirect)
+	router.GET("/api/v1/redirect/:code", us.Redirect)
 }

@@ -54,6 +54,17 @@ func (ush *UrlStoreHanlder) Shorten(w http.ResponseWriter, r *http.Request, _ ht
 	json.NewEncoder(w).Encode(u)
 }
 
-func (ush *UrlStoreHanlder) Redirect(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (ush *UrlStoreHanlder) Redirect(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	code := p.ByName("code")
+	if code == "" {
+		http.Error(w, "code is empty", http.StatusBadRequest)
+	}
 
+	res, err := ush.repo.FindByCode(code)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, res, http.StatusMovedPermanently)
 }

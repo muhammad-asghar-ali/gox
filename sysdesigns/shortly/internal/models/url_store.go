@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+
 	"github.com/muhammad-asghar-ali/go/sysdesigns/shortly/internal/config"
 )
 
@@ -26,4 +28,13 @@ func (u *UrlStoreRepository) Insert(us *UrlStore) error {
 	collection := config.GetUrlStoreCollection(config.GetDatabase())
 	_, err := collection.InsertOne(context.Background(), us)
 	return err
+}
+
+func (u *UrlStoreRepository) FindByCode(code string) (string, error) {
+	collection := config.GetUrlStoreCollection(config.GetDatabase())
+	filter := bson.M{"short_url": code, "expiration_date": bson.M{"$gt": time.Now()}}
+
+	e := &UrlStore{}
+	err := collection.FindOne(context.Background(), filter).Decode(e)
+	return e.LongUrl, err
 }

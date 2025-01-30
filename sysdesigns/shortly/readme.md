@@ -128,11 +128,11 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
           ```
 
     2.  **URL Redirection API:**
-        **Endpoint: GET ->** `/api/v1/{short_url_key}`
+        **Endpoint: GET ->** `/api/v1/redirect/{short_url_key}`
 
         - Sample Response
 
-          HTTP/1.1 302 Found
+          HTTP/1.1 301 Found
           Location: https://www.example.com/some/very/long/url
 
     3.  **User Registration:** (optional)

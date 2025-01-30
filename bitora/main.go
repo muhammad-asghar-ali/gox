@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/muhammad-asghar-ali/go/bitora/core"
+	"github.com/muhammad-asghar-ali/gox/bitora/core"
 )
 
 func main() {

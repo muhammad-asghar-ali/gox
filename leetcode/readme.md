@@ -14,3 +14,6 @@
 
 5. Longest Common Prefix
    To run code and verify the test cases run the cmd `go run longest_common_prefix.go`
+
+6. Merge Two Lists
+   To run code and verify the test cases run the cmd `go run merge_two_lists.go`

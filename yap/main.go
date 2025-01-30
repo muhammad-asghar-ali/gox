@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/muhammad-asghar-ali/go/yap/ws"
+	"github.com/muhammad-asghar-ali/gox/yap/ws"
 )
 
 func main() {

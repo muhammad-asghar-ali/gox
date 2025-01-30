@@ -1,4 +1,4 @@
-module github.com/muhammad-asghar-ali/go/yap
+module github.com/muhammad-asghar-ali/gox/yap
 
 go 1.23.4
 

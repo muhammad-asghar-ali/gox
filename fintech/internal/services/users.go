@@ -28,23 +28,12 @@ func Login(username string, pass string) (*types.LoginResponse, error) {
 		}, err
 	}
 
-	a := models.Account{}
-	accounts := a.UserAccounts(db, user.ID)
-
-	res := &types.UserResponse{
-		ID:       user.ID,
-		Username: user.Username,
-		Email:    user.Email,
-		Accounts: accounts,
-	}
-
 	token, err := helpers.GenerateToken(user.ID)
 	helpers.HandleError(err)
 
 	return &types.LoginResponse{
 		Message: "Ok",
 		Token:   token,
-		Data:    res,
 	}, nil
 }
 
@@ -97,5 +86,25 @@ func Register(username, email, pass string) (*types.RegisterResponse, error) {
 		Message: "Ok",
 		Data:    res,
 	}, nil
+}
 
+func GetUser(id string) (*types.UserResponse, error) {
+	db := helpers.GetDatabase()
+
+	user := &models.User{}
+	if err := user.GetUserByID(db, id); err != nil {
+		return nil, err
+	}
+
+	a := models.Account{}
+	accounts := a.UserAccounts(db, user.ID)
+
+	res := &types.UserResponse{
+		ID:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+		Accounts: accounts,
+	}
+
+	return res, nil
 }

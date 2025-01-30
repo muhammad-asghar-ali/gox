@@ -55,6 +55,14 @@ func (a *Account) UserAccounts(db *gorm.DB, userID uint) []*types.AccountRespons
 	return ra
 }
 
+func (u *User) GetUserByID(db *gorm.DB, id string) error {
+	if db.Where("id = ? ", id).First(&u).RecordNotFound() {
+		return errors.New("user not found")
+	}
+
+	return nil
+}
+
 func (a *Account) Create(db *gorm.DB) error {
 	return db.Create(&a).Error
 }

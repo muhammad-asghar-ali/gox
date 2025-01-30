@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"net/http"
 
 	"github.com/muhammad-asghar-ali/go/fintech/internal/helpers"
@@ -11,11 +10,10 @@ import (
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
-	helpers.HandleError(err)
+	body := helpers.ReadBody(r)
 
 	req := &types.LoginRequest{}
-	err = json.Unmarshal(body, req)
+	err := json.Unmarshal(body, req)
 	helpers.HandleError(err)
 
 	login, err := services.Login(req.Username, req.Password)
@@ -25,11 +23,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	body, err := io.ReadAll(r.Body)
-	helpers.HandleError(err)
+	body := helpers.ReadBody(r)
 
 	req := &types.RegisterRequest{}
-	err = json.Unmarshal(body, req)
+	err := json.Unmarshal(body, req)
 	helpers.HandleError(err)
 
 	register, err := services.Register(req.Username, req.Email, req.Password)

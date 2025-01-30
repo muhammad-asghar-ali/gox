@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/muhammad-asghar-ali/go/fintech/internal/types"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
 func PanicHandler(next http.Handler) http.Handler {

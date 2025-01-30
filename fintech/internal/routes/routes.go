@@ -5,8 +5,8 @@ import (
 
 	"github.com/gorilla/mux"
 
-	"github.com/muhammad-asghar-ali/go/fintech/internal/handlers"
-	"github.com/muhammad-asghar-ali/go/fintech/internal/middlewares"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/handlers"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/middlewares"
 )
 
 func StartApi() *mux.Router {

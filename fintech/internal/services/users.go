@@ -1,9 +1,9 @@
 package services
 
 import (
-	"github.com/muhammad-asghar-ali/go/fintech/internal/helpers"
-	"github.com/muhammad-asghar-ali/go/fintech/internal/models"
-	"github.com/muhammad-asghar-ali/go/fintech/internal/types"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/helpers"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
 func Login(username string, pass string) (*types.LoginResponse, error) {

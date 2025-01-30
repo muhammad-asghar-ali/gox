@@ -3,8 +3,8 @@ package main
 import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 
-	"github.com/muhammad-asghar-ali/go/fintech/internal/helpers"
-	"github.com/muhammad-asghar-ali/go/fintech/internal/models"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/helpers"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
 )
 
 func createAccounts() {

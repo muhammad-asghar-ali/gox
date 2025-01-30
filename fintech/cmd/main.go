@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/muhammad-asghar-ali/go/fintech/internal/routes"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/routes"
 )
 
 func main() {

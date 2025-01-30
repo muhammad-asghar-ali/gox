@@ -1,4 +1,4 @@
-module github.com/muhammad-asghar-ali/go/fintech
+module github.com/muhammad-asghar-ali/gox/fintech
 
 go 1.23.4
 

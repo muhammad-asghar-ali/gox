@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/jinzhu/gorm"
-	"github.com/muhammad-asghar-ali/go/fintech/internal/types"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
 type (

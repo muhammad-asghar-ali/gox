@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/muhammad-asghar-ali/go/fintech/internal/helpers"
-	"github.com/muhammad-asghar-ali/go/fintech/internal/services"
-	"github.com/muhammad-asghar-ali/go/fintech/internal/types"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/helpers"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/services"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {

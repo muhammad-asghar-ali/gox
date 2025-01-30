@@ -8,7 +8,7 @@ import (
 
 	"github.com/dgrijalva/jwt-go"
 
-	"github.com/muhammad-asghar-ali/go/fintech/internal/types"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
 func VerifyAuthorization(next http.Handler) http.Handler {

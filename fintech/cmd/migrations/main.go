@@ -39,6 +39,7 @@ func createAccounts() {
 func main() {
 	db := helpers.GetDatabase()
 	db.AutoMigrate(&models.User{}, &models.Account{})
+	db.AutoMigrate(&models.Transaction{})
 	defer db.Close()
 
 	createAccounts()

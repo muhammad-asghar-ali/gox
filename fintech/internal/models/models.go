@@ -22,6 +22,13 @@ type (
 		Balance uint   `json:"balance"`
 		UserID  uint   `json:"user_id"`
 	}
+
+	Transaction struct {
+		gorm.Model
+		From   uint `json:"from"`
+		To     uint `json:"to"`
+		Amount int  `json:"amount"`
+	}
 )
 
 func (u *User) CheckUser(db *gorm.DB, username string) error {
@@ -65,4 +72,27 @@ func (u *User) GetUserByID(db *gorm.DB, id string) error {
 
 func (a *Account) Create(db *gorm.DB) error {
 	return db.Create(&a).Error
+}
+
+func (a *Account) UpdateAccount(db *gorm.DB, id uint, amount int) error {
+	if err := db.Where("id = ? ", id).First(&a).Error; err != nil {
+		return err
+	}
+
+	a.Balance = uint(amount)
+	db.Save(&a)
+
+	return nil
+}
+
+func (a *Account) GetAccount(db *gorm.DB, id uint) error {
+	if db.Where("id = ? ", id).First(&a).RecordNotFound() {
+		return errors.New("account not found")
+	}
+
+	return nil
+}
+
+func (t *Transaction) CreateTransaction(db *gorm.DB) error {
+	return db.Create(&t).Error
 }

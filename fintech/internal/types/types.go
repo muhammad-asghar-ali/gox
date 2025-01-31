@@ -41,4 +41,10 @@ type (
 		Message string        `json:"message"`
 		Data    *UserResponse `json:"data"`
 	}
+
+	TransactionReq struct {
+		From   uint `json:"from"`
+		To     uint `json:"to"`
+		Amount int  `json:"amount"`
+	}
 )

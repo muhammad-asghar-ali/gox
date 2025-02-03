@@ -18,5 +18,6 @@ func StartApi() *mux.Router {
 
 	router.Handle("/me", middlewares.VerifyAuthorization(http.HandlerFunc(handlers.GetUser))).Methods("GET")
 	router.Handle("/transactions", middlewares.VerifyAuthorization(http.HandlerFunc(handlers.Transaction))).Methods("POST")
+	router.Handle("/users/transactions", middlewares.VerifyAuthorization(http.HandlerFunc(handlers.GetMyTransactions))).Methods("GET")
 	return router
 }

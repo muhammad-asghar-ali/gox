@@ -8,10 +8,10 @@ import (
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
-func Transaction(userId string, req *types.TransactionReq) (*models.Account, error) {
+func Transaction(userID string, req *types.TransactionReq) (*models.Account, error) {
 	db := helpers.GetDatabase()
 	user := &models.User{}
-	if err := user.GetUserByID(db, userId); err != nil {
+	if err := user.GetUserByID(db, userID); err != nil {
 		return nil, err
 	}
 
@@ -48,4 +48,20 @@ func Transaction(userId string, req *types.TransactionReq) (*models.Account, err
 	}
 
 	return fromAccount, nil
+}
+
+func GetMyTransactions(userID string) []types.TransactionResponse {
+	db := helpers.GetDatabase()
+	a := models.Account{}
+
+	accounts, _ := a.GetAccountsByUserID(db, userID)
+
+	transactions := []types.TransactionResponse{}
+	t := models.Transaction{}
+	for i := 0; i < len(accounts); i++ {
+		accTransactions := t.GetTransactionsByAccount(db, accounts[i].ID)
+		transactions = append(transactions, accTransactions...)
+	}
+
+	return transactions
 }

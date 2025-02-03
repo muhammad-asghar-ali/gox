@@ -89,6 +89,24 @@ func (a *Account) GetAccount(db *gorm.DB, id uint) error {
 	return nil
 }
 
+func (a *Account) GetAccountsByUserID(db *gorm.DB, user_id string) ([]Account, error) {
+	accounts := make([]Account, 0)
+	db.Table("accounts").Select("id, name, balance").Where("user_id = ? ", user_id).Scan(&accounts)
+
+	return accounts, nil
+}
+
 func (t *Transaction) CreateTransaction(db *gorm.DB) error {
 	return db.Create(&t).Error
+}
+
+func (t *Transaction) GetTransactionsByAccount(db *gorm.DB, id uint) []types.TransactionResponse {
+	transactions := []types.TransactionResponse{}
+
+	db.Table("transactions").
+		Select("id, transactions.from, transactions.to, amount").
+		Where(Transaction{From: id}).Or(Transaction{To: id}).
+		Scan(&transactions)
+
+	return transactions
 }

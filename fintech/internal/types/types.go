@@ -47,4 +47,11 @@ type (
 		To     uint `json:"to"`
 		Amount int  `json:"amount"`
 	}
+
+	TransactionResponse struct {
+		ID     uint `json:"id"`
+		From   uint `json:"from"`
+		To     uint `json:"to"`
+		Amount int  `json:"amount"`
+	}
 )

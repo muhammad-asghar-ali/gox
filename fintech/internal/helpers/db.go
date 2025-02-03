@@ -20,6 +20,9 @@ func ConnectDB() *gorm.DB {
 		HandleError(err)
 	})
 
+	db.DB().SetMaxIdleConns(20)
+	db.DB().SetMaxOpenConns(200)
+
 	return db
 }
 

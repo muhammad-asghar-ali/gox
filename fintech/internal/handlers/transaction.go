@@ -24,3 +24,12 @@ func Transaction(w http.ResponseWriter, r *http.Request) {
 
 	json.NewEncoder(w).Encode(res)
 }
+
+func GetMyTransactions(w http.ResponseWriter, r *http.Request) {
+	userID, err := helpers.GetUserIdFromCtx(r)
+	helpers.HandleError(err)
+
+	transactions := services.GetMyTransactions(userID)
+
+	json.NewEncoder(w).Encode(transactions)
+}

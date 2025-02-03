@@ -30,14 +30,14 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
 3.  **Capacity Estimation:**
 
-    2. **Throughput Requirements:**
+    1. **Throughput Requirements:**
 
        - **Average write per second (WPS):** (1,000,000 requests / 24 \* 60 \* 60 seconds) ~ 12
        - **Peak WPS:** 12 \* 10 = 120
        - **Average read per second (RPS):** 12 \* 100 = 1200
        - **Peal RPS:** 10 \* 1200 = 12000
 
-    3. **Storage Estimation:**
+    2. **Storage Estimation:**
 
        - We need the following informations for each URL.
          - **Short URL:** 7 characters
@@ -52,13 +52,13 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
            - **Total URLs per Year:** 1,000,000 × 365 = 365,000,000
            - **Total Storage per Year:** 365,000,000 × 135 bytes ~ 48 GB
 
-    4. **Bandwidth Estimation:** (optional)
+    3. **Bandwidth Estimation:** (optional)
        Assuming the HTTP 301 redirect response size is about 500 bytes (includes headers and the short URL).
 
        - **Total Read Bandwidth per Day:** 10000000 \* 100 \* 500 bytes = 50 GB / day
        - **Peak Bandwidth:** 500 bytes × 12,000 RPS = 6 MB/s (the peak bandwidth could be as high average).
 
-    5. **Caching Estimation:**
+    4. **Caching Estimation:**
 
        - The system is ead heavy so using cache can reduce the latency for read requests.
        - Can cache hot URLs, can identify the URLs where 20% of the URLs generate 80% of the read traffic.
@@ -66,7 +66,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
          - 1M \* 0.2 \* 135 Bytes ~ 26M
          - Cache hit ratio: 90:10
 
-    6. **Infrastructure Sizing:**
+    5. **Infrastructure Sizing:**
        - **API Servers:** start with 1-2 instances each capabile of 200 to 300 RPS.
        - **Database:** single database node to handle both storage and high read/write throughput.
        - **Cache Layer:** single node, depending on the load and cache hit ratio.

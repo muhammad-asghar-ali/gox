@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/itchyny/base58-go"
 
@@ -45,4 +46,29 @@ func GenerateShortURLFromCounter() string {
 
 	encoded := base58Encoding([]byte(fmt.Sprintf("%d", generated)))[:7]
 	return strings.ToLower(encoded)
+}
+
+func ValidateExpirationTime(exp *time.Time) time.Time {
+	mid := time.Now()
+	mxd := mid.Add(30 * 24 * time.Hour)
+
+	if exp == nil {
+		return mxd
+	}
+
+	if exp.Before(mid) {
+		return mid
+	} else if exp.After(mxd) {
+		return mxd
+	}
+
+	return *exp
+}
+
+func CheckExpiration(exp *time.Time) error {
+	if exp.Before(time.Now()) {
+		return fmt.Errorf("URL has expired")
+	}
+
+	return nil
 }

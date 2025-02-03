@@ -7,6 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 
 	"github.com/muhammad-asghar-ali/go/sysdesigns/shortly/internal/config"
+	"github.com/muhammad-asghar-ali/go/sysdesigns/shortly/internal/utils"
 )
 
 type (
@@ -35,6 +36,13 @@ func (u *UrlStoreRepository) FindByCode(code string) (string, error) {
 	filter := bson.M{"short_url": code, "expiration_date": bson.M{"$gt": time.Now()}}
 
 	e := &UrlStore{}
-	err := collection.FindOne(context.Background(), filter).Decode(e)
-	return e.LongUrl, err
+	if err := collection.FindOne(context.Background(), filter).Decode(e); err != nil {
+		return "", err
+	}
+
+	if err := utils.CheckExpiration(&e.ExpirationDate); err != nil {
+		return "", err
+	}
+
+	return e.LongUrl, nil
 }

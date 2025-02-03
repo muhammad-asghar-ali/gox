@@ -214,8 +214,19 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
              - Synchronizing a global counter across multiple servers can be challenging in distributed environments.
              - If a URL is shortened multiple times, each instance gets a new code, leading to duplicates in some cases.
 
-    2. **Link Expiration:**
+    2. **Link Expiration:** Link expiration allows URLs to be valid only for a specified period.
 
-    3. **URL Redirection:**
+       1. **Expiration Date Handling:** We can handle exporation via a user specified date or make the constand valus in the server the make the urls mark as expired.
+
+          - **User Specified Expiration:** user specify an expiration date when creating the short URL. The date must be validate that it's in the future and within allowable limits.
+
+          - **Default Expiration:** If no expiration date is provided, the service can assign a default expiration period.
+
+       2. **Expiration Logic:** There are serial ways to make the expiration loguc here are can discuss the expiration via background jobs (CRON JOB) and other one is real-time expiration.
+
+    3. **URL Redirection:** This involves two key steps
+
+       1. **Database Lookup:** Queries the database to retrieve the original URL associated with the short URL
+       2. **Database Lookup:** Once the long URL is retrieved, the api issues an HTTP redirect response, sending the user to the original URL
 
     4. **Analytics (optional):**

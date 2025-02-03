@@ -33,15 +33,10 @@ func (ush *UrlStoreHanlder) Shorten(w http.ResponseWriter, r *http.Request, _ ht
 		return
 	}
 
-	expiration := time.Now().Add(30 * 24 * time.Hour) // Default to 30 days
-	if req.ExpirationDate != nil {
-		expiration = *req.ExpirationDate
-	}
-
 	u := &models.UrlStore{
 		ShortUrl:       utils.GenerateShortURLFromCounter(),
 		LongUrl:        req.LongUrl,
-		ExpirationDate: expiration,
+		ExpirationDate: utils.ValidateExpirationTime(req.ExpirationDate),
 		UserID:         "",
 	}
 

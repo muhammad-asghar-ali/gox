@@ -75,10 +75,6 @@ func (a *Account) Create(db *gorm.DB) error {
 }
 
 func (a *Account) UpdateAccount(db *gorm.DB, id uint, amount int) error {
-	if err := db.Where("id = ? ", id).First(&a).Error; err != nil {
-		return err
-	}
-
 	a.Balance = uint(amount)
 	db.Save(&a)
 

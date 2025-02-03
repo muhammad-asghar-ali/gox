@@ -17,7 +17,6 @@ func Transaction(userId string, req *types.TransactionReq) (*models.Account, err
 
 	fromAccount := &models.Account{}
 	toAccount := &models.Account{}
-	a := &models.Account{}
 
 	if err := fromAccount.GetAccount(db, req.From); err != nil {
 		return nil, err
@@ -32,11 +31,11 @@ func Transaction(userId string, req *types.TransactionReq) (*models.Account, err
 		return nil, errors.New("account balance is too small")
 	}
 
-	if err := a.UpdateAccount(db, req.From, int(fromAccount.Balance)-req.Amount); err != nil {
+	if err := fromAccount.UpdateAccount(db, req.From, int(fromAccount.Balance)-req.Amount); err != nil {
 		return nil, err
 	}
 
-	if err := a.UpdateAccount(db, req.To, int(toAccount.Balance)+req.Amount); err != nil {
+	if err := toAccount.UpdateAccount(db, req.To, int(toAccount.Balance)+req.Amount); err != nil {
 		return nil, err
 	}
 
@@ -48,5 +47,5 @@ func Transaction(userId string, req *types.TransactionReq) (*models.Account, err
 		return nil, err
 	}
 
-	return a, nil
+	return fromAccount, nil
 }

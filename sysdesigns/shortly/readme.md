@@ -15,19 +15,20 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
        - May save the user information (optional).
 
     2. **Non Functional Requirements:**
+
        - High availability (the service should up like 99.9% time).
        - Low latency (redirect to url should heppen in ms).
        - Scalability (the system handle 1M records per day).
        - Security to prevent malicious use, such as phishing.
 
-2.  **Capacity Estimation:**
+2.  **Assumptions:**
 
-    1. **Assumptions:**
+    - **Daily requests per day to short urls** ~ 1000000.
+    - **Read and Write ratio:** 100:1 (for every URL creation, we expect 100 redirects).
+    - **Peak Traffic:** 10x of the average load.
+    - **Orignal Url length:** 100 characters.
 
-       - **Daily requests per day to short urls** ~ 1000000.
-       - **Read and Write ratio:** 100:1 (for every URL creation, we expect 100 redirects).
-       - **Peak Traffic:** 10x of the average load.
-       - **Orignal Url length:** 100 characters.
+3.  **Capacity Estimation:**
 
     2. **Throughput Requirements:**
 
@@ -45,9 +46,9 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
          - **ExpirationDate:** 8 bytes (timestamp)
          - **ClickCount:** 4 bytes (integer)
          - **UserID:** 8 bytes.
-       - Total stroage:
+       - Total storage:
          - **Storage per URL:** 7 + 100 + 8 + 8 + 4 + 8 = 135 bytes
-         - Stroage for one year:
+         - storage for one year:
            - **Total URLs per Year:** 1,000,000 × 365 = 365,000,000
            - **Total Storage per Year:** 365,000,000 × 135 bytes ~ 48 GB
 
@@ -70,7 +71,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
        - **Database:** single database node to handle both storage and high read/write throughput.
        - **Cache Layer:** single node, depending on the load and cache hit ratio.
 
-3.  **High Level Design:**
+4.  **High Level Design:**
 
     On a high level, we would need following components in our design:
 
@@ -83,7 +84,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
     ![Design](shortly.png)
 
-4.  **Database Design:**
+5.  **Database Design:**
 
     1. **SQL vs NoSQL:**
        To choose right database we need to understand our need. Let consider some factors:
@@ -102,7 +103,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
 
        ![Database Design](database_design.png)
 
-5.  **System API Design:**
+6.  **System API Design:**
     Design RESTful APIs that are efficient and scalable. We need following API implement the basic CRUD on urls and also provide the user registration and login endpoints. Here are the LIST of APIs needed to achieve the core functionality of a system.
 
     1.  **URL Shortening:**
@@ -127,11 +128,11 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
           ```
 
     2.  **URL Redirection API:**
-        **Endpoint: GET ->** `/api/v1/{short_url_key}`
+        **Endpoint: GET ->** `/api/v1/redirect/{short_url_key}`
 
         - Sample Response
 
-          HTTP/1.1 302 Found
+          HTTP/1.1 301 Found
           Location: https://www.example.com/some/very/long/url
 
     3.  **User Registration:** (optional)
@@ -176,7 +177,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
           }
           ```
 
-6.  **Key Components:**
+7.  **Deep Dive:**
 
     1. **URL Generator:** A function which generate the short, unique url for give long url by user.
        Here are some point which the shorten url algorithm work:
@@ -213,8 +214,19 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
              - Synchronizing a global counter across multiple servers can be challenging in distributed environments.
              - If a URL is shortened multiple times, each instance gets a new code, leading to duplicates in some cases.
 
-    2. **Link Expiration:**
+    2. **Link Expiration:** Link expiration allows URLs to be valid only for a specified period.
 
-    3. **URL Redirection:**
+       1. **Expiration Date Handling:** We can handle exporation via a user specified date or make the constand valus in the server the make the urls mark as expired.
+
+          - **User Specified Expiration:** user specify an expiration date when creating the short URL. The date must be validate that it's in the future and within allowable limits.
+
+          - **Default Expiration:** If no expiration date is provided, the service can assign a default expiration period.
+
+       2. **Expiration Logic:** There are serial ways to make the expiration loguc here are can discuss the expiration via background jobs (CRON JOB) and other one is real-time expiration.
+
+    3. **URL Redirection:** This involves two key steps
+
+       1. **Database Lookup:** Queries the database to retrieve the original URL associated with the short URL
+       2. **Database Lookup:** Once the long URL is retrieved, the api issues an HTTP redirect response, sending the user to the original URL
 
     4. **Analytics (optional):**

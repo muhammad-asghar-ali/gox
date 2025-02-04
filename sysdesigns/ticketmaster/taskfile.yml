@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  sqlc:
+    desc: Generate Go code from SQL files
+    cmds:
+      - sqlc generate -f ./internal/db/sqlc.yml
+
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - go run ./internal/db/migrations

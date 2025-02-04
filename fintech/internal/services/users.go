@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/database"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/helpers"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
@@ -14,7 +15,7 @@ func Login(username string, pass string) (*types.LoginResponse, error) {
 		return nil, err
 	}
 
-	db := helpers.GetDatabase()
+	db := database.GetDatabase()
 	user := &models.User{}
 	if err := user.CheckUser(db, username); err != nil {
 		return &types.LoginResponse{
@@ -46,7 +47,7 @@ func Register(username, email, pass string) (*types.RegisterResponse, error) {
 		return nil, err
 	}
 
-	db := helpers.GetDatabase()
+	db := database.GetDatabase()
 	generatedPassword := helpers.HashAndSalt([]byte(pass))
 
 	// TODO - apply transections
@@ -89,7 +90,7 @@ func Register(username, email, pass string) (*types.RegisterResponse, error) {
 }
 
 func GetUser(id string) (*types.UserResponse, error) {
-	db := helpers.GetDatabase()
+	db := database.GetDatabase()
 
 	user := &models.User{}
 	if err := user.GetUserByID(db, id); err != nil {

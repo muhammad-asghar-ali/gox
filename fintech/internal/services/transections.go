@@ -3,13 +3,13 @@ package services
 import (
 	"errors"
 
-	"github.com/muhammad-asghar-ali/gox/fintech/internal/helpers"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/database"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
 func Transaction(userID string, req *types.TransactionReq) (*models.Account, error) {
-	db := helpers.GetDatabase()
+	db := database.GetDatabase()
 	user := &models.User{}
 	if err := user.GetUserByID(db, userID); err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func Transaction(userID string, req *types.TransactionReq) (*models.Account, err
 }
 
 func GetMyTransactions(userID string) []types.TransactionResponse {
-	db := helpers.GetDatabase()
+	db := database.GetDatabase()
 	a := models.Account{}
 
 	accounts, _ := a.GetAccountsByUserID(db, userID)

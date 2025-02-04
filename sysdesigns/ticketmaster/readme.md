@@ -109,6 +109,26 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
 
 5.  **Database Design:**
 
+    1. **SQL vs NoSQL:**
+       To choose right database we need to understand our need. Let consider some factors:
+       - We need to store billion records.
+       - Read queries are much higher then the write.
+       - We do need joins.
+
+    Given these points, a SQL database like Postgres, MySQL are better option.
+
+    2.  **Schema Design:** To satisfy our key functional requirements, we'll need the following entities
+
+        1. Events
+        2. Users
+        3. Performers
+        4. Venues
+        5. Tickets
+        6. Bookings
+        7. Payments
+
+        ![Database Design](database_design.png)
+
 6.  **System API Design:**
 
 7.  **Deep Dive:**

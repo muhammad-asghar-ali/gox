@@ -29,6 +29,12 @@ type Event struct {
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
 }
 
+type EventPerformer struct {
+	ID          uuid.UUID `json:"id"`
+	EventID     uuid.UUID `json:"event_id"`
+	PerformerID uuid.UUID `json:"performer_id"`
+}
+
 type Payment struct {
 	ID            uuid.UUID        `json:"id"`
 	BookingID     uuid.UUID        `json:"booking_id"`
@@ -37,6 +43,14 @@ type Payment struct {
 	PaymentMethod string           `json:"payment_method"`
 	Status        string           `json:"status"`
 	CreatedAt     pgtype.Timestamp `json:"created_at"`
+}
+
+type Performer struct {
+	ID        uuid.UUID        `json:"id"`
+	Name      string           `json:"name"`
+	Genre     string           `json:"genre"`
+	Bio       string           `json:"bio"`
+	CreatedAt pgtype.Timestamp `json:"created_at"`
 }
 
 type Ticket struct {

@@ -8,7 +8,15 @@ import (
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/db"
 )
 
-func HealthCheck(c fiber.Ctx) error {
+type (
+	HealthHandler struct{}
+)
+
+func NewHealthHandler() *HealthHandler {
+	return &HealthHandler{}
+}
+
+func (hh *HealthHandler) HealthCheck(c fiber.Ctx) error {
 	if err := db.Get().Ping(context.Background()); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"status":  "error",

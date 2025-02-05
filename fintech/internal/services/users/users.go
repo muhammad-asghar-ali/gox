@@ -1,4 +1,4 @@
-package services
+package users
 
 import (
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/database"

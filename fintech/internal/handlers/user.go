@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/helpers"
-	"github.com/muhammad-asghar-ali/gox/fintech/internal/services"
+	services "github.com/muhammad-asghar-ali/gox/fintech/internal/services/users"
 )
 
 func GetUser(w http.ResponseWriter, r *http.Request) {

@@ -1,9 +1,15 @@
-package services
+package transactions
 
 import (
-	"errors"
+	"context"
+	"fmt"
+	"time"
+
+	"go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/temporal"
 
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/database"
+	"github.com/muhammad-asghar-ali/gox/fintech/internal/durable"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
@@ -15,39 +21,34 @@ func Transaction(userID string, req *types.TransactionReq) (*models.Account, err
 		return nil, err
 	}
 
-	fromAccount := &models.Account{}
-	toAccount := &models.Account{}
-
-	if err := fromAccount.GetAccount(db, req.From); err != nil {
-		return nil, err
-	}
-	if err := toAccount.GetAccount(db, req.To); err != nil {
-		return nil, err
-	}
-
-	if fromAccount.UserID != user.ID {
-		return nil, errors.New("you are not owner of the account")
-	} else if int(fromAccount.Balance) < req.Amount {
-		return nil, errors.New("account balance is too small")
+	options := client.StartWorkflowOptions{
+		ID:        "transaction-workflow-001",
+		TaskQueue: durable.MoneyTransferTaskQueueName,
+		RetryPolicy: &temporal.RetryPolicy{
+			InitialInterval:    time.Second * 2,
+			BackoffCoefficient: 2.0,
+			MaximumAttempts:    5,
+		},
 	}
 
-	if err := fromAccount.UpdateAccount(db, req.From, int(fromAccount.Balance)-req.Amount); err != nil {
+	w := Workflow{}
+	run, err := durable.Set().Client().
+		ExecuteWorkflow(context.Background(), options, w.Transaction, req, user.ID)
+	if err != nil {
 		return nil, err
 	}
 
-	if err := toAccount.UpdateAccount(db, req.To, int(toAccount.Balance)+req.Amount); err != nil {
+	fmt.Println("Started Workflow:", "ID:", run.GetID(), "RunID:", run.GetRunID())
+
+	result := &models.Account{}
+	err = run.Get(context.Background(), &result)
+	if err != nil {
 		return nil, err
 	}
 
-	transaction := &models.Transaction{
-		From: req.From, To: req.To, Amount: req.Amount,
-	}
+	fmt.Println("result", result)
 
-	if err := transaction.CreateTransaction(db); err != nil {
-		return nil, err
-	}
-
-	return fromAccount, nil
+	return result, nil
 }
 
 func GetMyTransactions(userID string) []types.TransactionResponse {

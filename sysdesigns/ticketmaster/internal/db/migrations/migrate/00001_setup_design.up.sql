@@ -71,3 +71,16 @@ CREATE TABLE IF NOT EXISTS payments (
   FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS performers (
+  id uuid NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
+  name varchar(500) NOT NULL,
+  genre varchar(500) NOT NULL,
+  bio text NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS event_performers (
+  id uuid NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_id uuid NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+  performer_id uuid NOT NULL REFERENCES performers(id) ON DELETE CASCADE,,
+);

@@ -130,5 +130,144 @@ Ticketmaster is an online platform that allows users to purchase tickets for con
         ![Database Design](database_design.png)
 
 6.  **System API Design:**
+    A ticketing system like Ticketmaster requires APIs for users to browse events, book tickets, make payments, and manage bookings. Below is a RESTful API design covering the core functionalities.
+
+    1. **User API:** Basic auth APIs for user to access the system.
+
+       - **Register User**
+
+         - **Endpoint:** `POST /api/users/register`
+
+         - Sample Request body:
+
+         ```json
+         {
+           "name": "John Doe",
+           "email": "john@example.com",
+           "password": "securepassword",
+           "phone": "+1234567890"
+         }
+         ```
+
+         - Sample Response body:
+
+         ```json
+         {
+           "message": "User registered successfully",
+           "data": {
+             "name": "John Doe",
+             "email": "john@example.com",
+             "phone": "+1234567890"
+           }
+         }
+         ```
+
+       - **Login User**
+
+         - **Endpoint:** `POST /api/users/login`
+
+         - Sample Request body:
+
+         ```json
+         {
+           "email": "john@example.com",
+           "password": "securepassword"
+         }
+         ```
+
+         - Sample Response body:
+
+         ```json
+         {
+           "message": "User login successfully",
+           "data": {
+             "access_token": ".......",
+             "refresh_token": "......."
+           }
+         }
+         ```
+
+    2. **Event API:** There are basic create, read, read_all, updated and delete APIs, here are sample API structure.
+
+       - **Get All Events**
+
+         - **Endpoint:** `GET /api/events`
+
+         - Sample Response body:
+
+         ```json
+         [
+           {
+             "id": "101",
+             "name": "Coldplay Live",
+             "venue": "Madison Square Garden",
+             "date": "2025-06-10T20:00:00Z"
+           }
+         ]
+         ```
+
+       - **Get Event Details**
+
+         - **Endpoint:** `GET /api/events/{event_id}`
+
+         - Sample Response body:
+
+         ```json
+         {
+           "id": "101",
+           "name": "Coldplay Live",
+           "venue": "Madison Square Garden",
+           "date": "2025-06-10T20:00:00Z",
+           "tickets": [
+             { "ticket_type": "VIP", "price": 150.0, "available": 50 },
+             { "ticket_type": "General", "price": 75.0, "available": 200 }
+           ]
+         }
+         ```
+
+    3. **Ticket Booking API:** There are basic create, read, read_all, updated and delete APIs, here are sample API structure.
+
+       - **Book Tickets**
+
+         - **Endpoint:** `POST /api/bookings`
+
+         - Sample Request body:
+
+         ```json
+         {
+           "user_id": "111",
+           "event_id": "101",
+           "ticket_type": "VIP",
+           "quantity": 2
+         }
+         ```
+
+         - Sample Response body:
+
+         ```json
+         {
+           "id": "5001",
+           "status": "pending",
+           "total_price": 300.0
+         }
+         ```
+
+       - **Get User Bookings**
+
+         - **Endpoint:** `GET /api/bookings/{user_id}`
+
+         - Sample Response body:
+
+         ```json
+         [
+           {
+             "id": "5001",
+             "event_name": "Coldplay Live",
+             "ticket_type": "VIP",
+             "quantity": 2,
+             "status": "confirmed"
+           }
+         ]
+         ```
 
 7.  **Deep Dive:**

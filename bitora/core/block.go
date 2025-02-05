@@ -3,6 +3,7 @@ package core
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/gob"
 	"strconv"
 	"time"
 )
@@ -23,6 +24,28 @@ func (b *Block) SetHash() {
 	hash := sha256.Sum256(headers)
 
 	b.Hash = hash[:]
+}
+
+func (b *Block) Serialize() []byte {
+	res := &bytes.Buffer{}
+	encoder := gob.NewEncoder(res)
+
+	if err := encoder.Encode(b); err != nil {
+		return nil
+	}
+
+	return res.Bytes()
+}
+
+func Deserialize(d []byte) *Block {
+	b := &Block{}
+
+	decoder := gob.NewDecoder(bytes.NewReader(d))
+	if err := decoder.Decode(b); err != nil {
+		return nil
+	}
+
+	return b
 }
 
 func NewBlock(data string, prevBlockHash []byte) *Block {

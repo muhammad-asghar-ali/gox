@@ -4,13 +4,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/muhammad-asghar-ali/gox/fintech/internal/durable"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/routes"
+	"github.com/muhammad-asghar-ali/gox/fintech/temporal/worker"
 )
 
 func main() {
 	go func() {
-		if err := durable.Run(); err != nil {
+		if err := worker.Run(); err != nil {
 			log.Fatalln("Unable to start Temporal worker:", err)
 		}
 	}()

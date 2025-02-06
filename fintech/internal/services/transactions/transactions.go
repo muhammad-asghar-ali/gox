@@ -5,13 +5,14 @@ import (
 	"fmt"
 	"time"
 
-	"go.temporal.io/sdk/client"
+	"github.com/google/uuid"
+	c "go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/temporal"
 
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/database"
-	"github.com/muhammad-asghar-ali/gox/fintech/internal/durable"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
+	"github.com/muhammad-asghar-ali/gox/fintech/temporal/client"
 )
 
 func Transaction(userID string, req *types.TransactionReq) (*models.Account, error) {
@@ -21,9 +22,9 @@ func Transaction(userID string, req *types.TransactionReq) (*models.Account, err
 		return nil, err
 	}
 
-	options := client.StartWorkflowOptions{
-		ID:        "transaction-workflow-001",
-		TaskQueue: durable.MoneyTransferTaskQueueName,
+	options := c.StartWorkflowOptions{
+		ID:        uuid.NewString(),
+		TaskQueue: client.MoneyTransferTaskQueueName,
 		RetryPolicy: &temporal.RetryPolicy{
 			InitialInterval:    time.Second * 2,
 			BackoffCoefficient: 2.0,
@@ -32,7 +33,7 @@ func Transaction(userID string, req *types.TransactionReq) (*models.Account, err
 	}
 
 	w := Workflow{}
-	run, err := durable.Set().Client().
+	run, err := client.New().Client().
 		ExecuteWorkflow(context.Background(), options, w.Transaction, req, user.ID)
 	if err != nil {
 		return nil, err

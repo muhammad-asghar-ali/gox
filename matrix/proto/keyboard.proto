@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package pb;
+
+enum Layout {
+  LAYOUT_UNSPECIFIED = 0;
+  LAYOUT_QWERTY = 1;
+  LAYOUT_QWERTZ = 2;
+  LAYOUT_AZERTY = 3;
+}
+
+message Keyboard {
+  Layout layout = 1;
+  bool backlit = 2;
+}

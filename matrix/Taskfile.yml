@@ -1,0 +1,33 @@
+version: "3"
+
+tasks:
+  gen:
+    desc: "Generate Go gRPC code from proto files"
+    cmds:
+      - buf generate proto
+    preconditions:
+      - sh: command -v buf
+    silent: true
+
+  proto-lint:
+    desc: "Lint Protobuf files"
+    cmds:
+      - buf lint proto
+    preconditions:
+      - sh: command -v buf
+    silent: true
+
+  test:
+    desc: run the test
+    cmds:
+      - go test -cover -race ./...
+
+  server:
+    desc: run the server
+    cmds:
+      - go run cmd/server/main.go
+
+  client:
+    desc: run the client
+    cmds:
+      - go run cmd/client/main.go

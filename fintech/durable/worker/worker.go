@@ -33,9 +33,13 @@ func NewWorker(c c.Client, queue string) worker.Worker {
 	uw := users.Workflow{}
 	ua := users.Activities{}
 	wf.RegisterWorkflow(uw.Login)
+	wf.RegisterWorkflow(uw.Register)
+
 	wf.RegisterActivity(ua.CheckUser)
 	wf.RegisterActivity(ua.GenerateToken)
 	wf.RegisterActivity(ua.GetUserByID)
+	wf.RegisterActivity(ua.CreateUser)
+	wf.RegisterActivity(ua.CreateUserAccount)
 
 	return wf
 }

@@ -20,7 +20,7 @@ func Login(req *types.LoginRequest) (*types.LoginResponse, error) {
 
 	options := client.StartWorkflowOptions(client.DQueue)
 
-	w := Workflow{}
+	w := &Workflow{}
 	run, err := client.New().Client().
 		ExecuteWorkflow(context.Background(), options, w.Login, req)
 	if err != nil {
@@ -39,55 +39,31 @@ func Login(req *types.LoginRequest) (*types.LoginResponse, error) {
 	}, nil
 }
 
-func Register(username, email, pass string) (*types.RegisterResponse, error) {
+func Register(req *types.RegisterRequest) (*types.RegisterResponse, error) {
 	if err := helpers.Validation([]helpers.Validate{
-		{Value: username, Valid: "username"},
-		{Value: pass, Valid: "password"},
-		{Value: email, Valid: "email"},
+		{Value: req.Username, Valid: "username"},
+		{Value: req.Password, Valid: "password"},
+		{Value: req.Email, Valid: "email"},
 	}); err != nil {
 		return nil, err
 	}
 
-	db := database.GetDatabase()
-	generatedPassword := helpers.HashAndSalt([]byte(pass))
+	options := client.StartWorkflowOptions(client.DQueue)
 
-	// TODO - apply transections
-	user := &models.User{
-		Username: username,
-		Email:    email,
-		Password: generatedPassword,
-	}
-	if err := user.Create(db); err != nil {
+	w := &Workflow{}
+	res := &types.RegisterResponse{}
+	run, err := client.New().Client().
+		ExecuteWorkflow(context.Background(), options, w.Register, req)
+	if err != nil {
 		return nil, err
 	}
 
-	account := &models.Account{
-		Type:    "Daily Account",
-		Name:    string(username + "'s" + " account"),
-		Balance: 0,
-		UserID:  user.ID,
-	}
-	if err := account.Create(db); err != nil {
+	err = run.Get(context.Background(), &res)
+	if err != nil {
 		return nil, err
 	}
 
-	ra := &types.AccountResponse{
-		Type:    account.Type,
-		Name:    account.Name,
-		Balance: account.Balance,
-	}
-
-	res := &types.UserResponse{
-		ID:       user.ID,
-		Username: user.Username,
-		Email:    user.Email,
-		Accounts: []*types.AccountResponse{ra},
-	}
-
-	return &types.RegisterResponse{
-		Message: "Ok",
-		Data:    res,
-	}, nil
+	return res, nil
 }
 
 func GetUser(id string) (*types.UserResponse, error) {

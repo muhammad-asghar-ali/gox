@@ -1,11 +1,9 @@
 package transactions
 
 import (
-	"time"
-
-	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
 
+	"github.com/muhammad-asghar-ali/gox/fintech/durable/client"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/services/users"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
@@ -16,17 +14,7 @@ type (
 )
 
 func (w *Workflow) Transaction(ctx workflow.Context, req *types.TransactionReq, user_id string) (*models.Account, error) {
-	retrypolicy := &temporal.RetryPolicy{
-		InitialInterval:    time.Second,
-		BackoffCoefficient: 2.0,
-		MaximumInterval:    100 * time.Second,
-		MaximumAttempts:    500,
-	}
-
-	options := workflow.ActivityOptions{
-		StartToCloseTimeout: time.Minute,
-		RetryPolicy:         retrypolicy,
-	}
+	options := client.ActivityOptions()
 
 	ctx = workflow.WithActivityOptions(ctx, options)
 

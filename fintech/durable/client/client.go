@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/temporal"
+	"go.temporal.io/sdk/workflow"
 )
 
 type (
@@ -59,5 +60,21 @@ func StartWorkflowOptions(queue string) client.StartWorkflowOptions {
 			BackoffCoefficient: 2.0,
 			MaximumAttempts:    5,
 		},
+	}
+}
+
+func retry() *temporal.RetryPolicy {
+	return &temporal.RetryPolicy{
+		InitialInterval:    time.Second,
+		BackoffCoefficient: 2.0,
+		MaximumInterval:    100 * time.Second,
+		MaximumAttempts:    500,
+	}
+}
+
+func ActivityOptions() workflow.ActivityOptions {
+	return workflow.ActivityOptions{
+		StartToCloseTimeout: time.Minute,
+		RetryPolicy:         retry(),
 	}
 }

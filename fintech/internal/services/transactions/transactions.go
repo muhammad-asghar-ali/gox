@@ -12,7 +12,7 @@ import (
 func Transaction(userID string, req *types.TransactionReq) (*models.Account, error) {
 	options := client.StartWorkflowOptions(client.DQueue)
 
-	w := Workflow{}
+	w := &Workflow{}
 	run, err := client.New().Client().
 		ExecuteWorkflow(context.Background(), options, w.Transaction, req, userID)
 	if err != nil {

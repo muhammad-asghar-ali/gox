@@ -29,7 +29,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, req)
 	helpers.HandleError(err)
 
-	register, err := users.Register(req.Username, req.Email, req.Password)
+	register, err := users.Register(req)
 	helpers.HandleError(err)
 
 	json.NewEncoder(w).Encode(register)

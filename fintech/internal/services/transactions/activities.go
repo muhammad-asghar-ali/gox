@@ -13,8 +13,9 @@ type (
 	Activities struct{}
 )
 
+var db = database.GetDatabase()
+
 func (a *Activities) GetAccount(ctx context.Context, id uint) (*models.Account, error) {
-	db := database.GetDatabase()
 	account := &models.Account{}
 
 	if err := account.GetAccount(db, id); err != nil {
@@ -41,8 +42,6 @@ func (a *Activities) CheckBalance(ctx context.Context, curr, want_to int) error 
 }
 
 func (a *Activities) Tranfer(ctx context.Context, fromAccount, toAccount *models.Account, req *types.TransactionReq) error {
-	db := database.GetDatabase()
-
 	if err := fromAccount.UpdateAccount(db, req.From, int(fromAccount.Balance)-req.Amount); err != nil {
 		return err
 	}
@@ -55,8 +54,6 @@ func (a *Activities) Tranfer(ctx context.Context, fromAccount, toAccount *models
 }
 
 func (a *Activities) CreateTransaction(ctx context.Context, req *types.TransactionReq) error {
-	db := database.GetDatabase()
-
 	transaction := &models.Transaction{
 		From: req.From, To: req.To, Amount: req.Amount,
 	}

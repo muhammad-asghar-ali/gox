@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/muhammad-asghar-ali/gox/fintech/durable/worker"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/routes"
-	"github.com/muhammad-asghar-ali/gox/fintech/temporal/worker"
 )
 
 func main() {

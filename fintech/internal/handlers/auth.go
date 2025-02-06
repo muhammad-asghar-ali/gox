@@ -16,7 +16,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	err := json.Unmarshal(body, req)
 	helpers.HandleError(err)
 
-	login, err := users.Login(req.Username, req.Password)
+	login, err := users.Login(req)
 	helpers.HandleError(err)
 
 	json.NewEncoder(w).Encode(login)

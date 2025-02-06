@@ -1,36 +1,37 @@
 package users
 
 import (
+	"context"
+
+	"github.com/muhammad-asghar-ali/gox/fintech/durable/client"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/database"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/helpers"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/models"
 	"github.com/muhammad-asghar-ali/gox/fintech/internal/types"
 )
 
-func Login(username string, pass string) (*types.LoginResponse, error) {
+func Login(req *types.LoginRequest) (*types.LoginResponse, error) {
 	if err := helpers.Validation([]helpers.Validate{
-		{Value: username, Valid: "username"},
-		{Value: pass, Valid: "password"},
+		{Value: req.Username, Valid: "username"},
+		{Value: req.Password, Valid: "password"},
 	}); err != nil {
 		return nil, err
 	}
 
-	db := database.GetDatabase()
-	user := &models.User{}
-	if err := user.CheckUser(db, username); err != nil {
-		return &types.LoginResponse{
-			Message: err.Error(),
-		}, err
+	options := client.StartWorkflowOptions(client.DQueue)
+
+	w := Workflow{}
+	run, err := client.New().Client().
+		ExecuteWorkflow(context.Background(), options, w.Login, req)
+	if err != nil {
+		return nil, err
 	}
 
-	if err := helpers.ComparePassword(pass, user.Password); err != nil {
-		return &types.LoginResponse{
-			Message: err.Error(),
-		}, err
+	var token string
+	err = run.Get(context.Background(), &token)
+	if err != nil {
+		return nil, err
 	}
-
-	token, err := helpers.GenerateToken(user.ID)
-	helpers.HandleError(err)
 
 	return &types.LoginResponse{
 		Message: "Ok",

@@ -14,6 +14,6 @@ func SetupRoutes(app *fiber.App) {
 	user := handlers.NewAuthHandler(services.UserService{})
 
 	api.Get("/health", health.HealthCheck)
-	api.Get("/register", user.Register)
-	api.Get("/login", user.Login)
+	api.Post("/register", user.Register)
+	api.Post("/login", user.Login)
 }

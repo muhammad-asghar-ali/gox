@@ -23,6 +23,7 @@ type (
 
 	Server struct {
 		Port string
+		Jwt  string
 	}
 
 	Config struct {
@@ -54,6 +55,7 @@ func Load() *Config {
 
 		server := Server{
 			Port: os.Getenv("PORT"),
+			Jwt:  os.Getenv("JWT_SECRET"),
 		}
 
 		c = &Config{
@@ -112,4 +114,8 @@ func (c *Config) ConnectionURI() string {
 		c.Database.Name,
 		ssl,
 	)
+}
+
+func (c *Config) GetJwtSecret() string {
+	return c.Server.Jwt
 }

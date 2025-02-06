@@ -1,4 +1,5 @@
-version: '3'
+version: '3.7'
+
 services:
   db:
     image: postgres:latest
@@ -10,5 +11,62 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fintech
+
+  temporal-db:
+    container_name: temporal-db
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: durable
+    volumes:
+      - temporal-db-data:/var/lib/postgresql/data
+    networks:
+      - fintech
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
+
+  temporal:
+    container_name: temporal
+    image: temporalio/auto-setup:1.25.1
+    depends_on:
+      temporal-db:
+        condition: service_healthy
+    environment:
+      DB: postgresql 
+      DBNAME: durable
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PWD: postgres
+      POSTGRES_SEEDS: temporal-db
+      DYNAMIC_CONFIG_FILE_PATH: /etc/temporal/config/dynamicconfig/development.yaml
+    ports:
+      - 7233:7233
+    volumes:
+      - ./tools/temporal/dynamicconfig/:/etc/temporal/config/dynamicconfig/
+    networks:
+      - fintech
+
+  temporal-ui:
+    container_name: temporal-ui
+    image: temporalio/ui:2.33.0
+    depends_on:
+      - temporal
+    environment:
+      TEMPORAL_ADDRESS: temporal:7233
+    ports:
+      - 8080:8080
+    networks:
+      - fintech
+
 volumes:
-  postgres_data:
+  postgres_data: {}
+  temporal-db-data: {}
+
+networks:
+  fintech: {}

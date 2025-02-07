@@ -1,8 +1,9 @@
-version: '3.7'
+version: '3.8'
 
 services:
   db:
     image: postgres:latest
+    container_name: postgres-db
     environment:
       POSTGRES_USER: ${USER}
       POSTGRES_PASSWORD: ${PASSWORD}
@@ -15,12 +16,12 @@ services:
       - fintech
 
   temporal-db:
+    image: postgres:latest
     container_name: temporal-db
-    image: postgres:16
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: durable
+      POSTGRES_USER:  ${TEMPORAL_DBUSER}
+      POSTGRES_PASSWORD: ${TEMPORAL_DBPASS}
+      POSTGRES_DB: ${TEMPORAL_DBNAME}
     volumes:
       - temporal-db-data:/var/lib/postgresql/data
     networks:
@@ -32,41 +33,59 @@ services:
       start_period: 10s
 
   temporal:
-    container_name: temporal
     image: temporalio/auto-setup:1.25.1
+    container_name: temporal
     depends_on:
       temporal-db:
         condition: service_healthy
     environment:
-      DB: postgresql 
-      DBNAME: durable
+      DB: postgres12
+      DB_NAME: ${TEMPORAL_DBNAME}
       DB_PORT: 5432
-      POSTGRES_USER: postgres
-      POSTGRES_PWD: postgres
+      POSTGRES_USER: ${TEMPORAL_DBUSER}
+      POSTGRES_PWD: ${TEMPORAL_DBPASS}
       POSTGRES_SEEDS: temporal-db
-      DYNAMIC_CONFIG_FILE_PATH: /etc/temporal/config/dynamicconfig/development.yaml
     ports:
-      - 7233:7233
-    volumes:
-      - ./tools/temporal/dynamicconfig/:/etc/temporal/config/dynamicconfig/
+      - "7233:7233"
     networks:
       - fintech
 
   temporal-ui:
-    container_name: temporal-ui
     image: temporalio/ui:2.33.0
+    container_name: temporal-ui
     depends_on:
       - temporal
     environment:
       TEMPORAL_ADDRESS: temporal:7233
     ports:
-      - 8080:8080
+      - "8080:8080"
+    networks:
+      - fintech
+
+  tigerbeetle:
+    image: ghcr.io/tigerbeetle/tigerbeetle:latest
+    container_name: tigerbeetle
+    restart: unless-stopped
+    volumes:
+      - tigerbeetle_data:/var/lib/tigerbeetle
+    ports:
+      - "3000:3000"
+    entrypoint: 
+      - /bin/sh
+      - -c
+      - |
+        if [ ! -f /var/lib/tigerbeetle/0_0.tigerbeetle ]; then
+          echo "Initializing TigerBeetle database..."
+          /tigerbeetle format --cluster=0 --replica=0 --replica-count=1 /var/lib/tigerbeetle/0_0.tigerbeetle
+        fi
+        exec /tigerbeetle start --addresses=0.0.0.0:3000 /var/lib/tigerbeetle/0_0.tigerbeetle
     networks:
       - fintech
 
 volumes:
   postgres_data: {}
   temporal-db-data: {}
+  tigerbeetle_data: {}
 
 networks:
   fintech: {}

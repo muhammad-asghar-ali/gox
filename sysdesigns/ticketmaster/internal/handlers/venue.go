@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/entities"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/services"
 )
@@ -26,10 +27,7 @@ func NewVenueHandler(us services.VenueService) Venue {
 func (vh *VenueHandler) CreateVenue(c fiber.Ctx) error {
 	req := entities.CreateVenueParams{}
 	if err := c.Bind().JSON(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status":  "error",
-			"message": err.Error(),
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
 	}
 
 	user := c.Locals("user").(entities.User)
@@ -37,15 +35,8 @@ func (vh *VenueHandler) CreateVenue(c fiber.Ctx) error {
 
 	created, err := vh.VenueService.CreateVenue(context.Background(), req)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  "error",
-			"message": err.Error(),
-		})
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status":  "ok",
-		"message": "User register successfully",
-		"data":    created,
-	})
+	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Venue add successfully"))
 }

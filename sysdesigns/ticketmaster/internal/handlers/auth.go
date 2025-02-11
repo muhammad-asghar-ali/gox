@@ -28,47 +28,27 @@ func NewAuthHandler(us services.UserService) Auth {
 func (uh *AuthHandler) Register(c fiber.Ctx) error {
 	req := entities.CreateUserParams{}
 	if err := c.Bind().JSON(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status":  "error",
-			"message": err.Error(),
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
 	}
 
 	user, err := uh.UserService.Create(context.Background(), &req)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  "error",
-			"message": err.Error(),
-		})
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status":  "ok",
-		"message": "User register successfully",
-		"data":    user,
-	})
+	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(user, "User register successfully"))
 }
 
 func (uh *AuthHandler) Login(c fiber.Ctx) error {
 	req := common.LoginRequest{}
 	if err := c.Bind().JSON(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"status":  "error",
-			"message": err.Error(),
-		})
+		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
 	}
 
 	user, err := uh.UserService.Login(context.Background(), &req)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  "error",
-			"message": err.Error(),
-		})
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status":  "ok",
-		"message": "User login successfully",
-		"data":    user,
-	})
+	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(user, "User login successfully"))
 }

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v3"
 
+	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/db"
 )
 
@@ -18,14 +19,8 @@ func NewHealthHandler() *HealthHandler {
 
 func (hh *HealthHandler) HealthCheck(c fiber.Ctx) error {
 	if err := db.Get().Ping(context.Background()); err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"status":  "error",
-			"message": "Database connection failed",
-		})
+		c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse("Database connection failed"))
 	}
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"status":  "ok",
-		"message": "Server and database are running",
-	})
+	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse("ok", "Server and database are running"))
 }

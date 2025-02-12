@@ -23,7 +23,7 @@ type Event struct {
 	ID          uuid.UUID        `json:"id"`
 	Name        string           `json:"name"`
 	Description string           `json:"description"`
-	AddedBy     uuid.UUID        `json:"added_by"`
+	AddedBy *uuid.UUID        `json:"added_by"`
 	VenueID     uuid.UUID        `json:"venue_id"`
 	EventDate   pgtype.Timestamp `json:"event_date"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
@@ -78,6 +78,6 @@ type Venue struct {
 	Name      string           `json:"name"`
 	Location  string           `json:"location"`
 	Capacity  int32            `json:"capacity"`
-	AddedBy   uuid.UUID        `json:"added_by"`
+	AddedBy *uuid.UUID        `json:"added_by"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 }

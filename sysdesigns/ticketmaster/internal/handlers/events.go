@@ -31,7 +31,7 @@ func (eh *EventHandler) CreateEvent(c fiber.Ctx) error {
 	}
 
 	user := c.Locals("user").(entities.User)
-	req.AddedBy = user.ID
+	req.AddedBy = &user.ID
 
 	created, err := eh.EventService.CreateEvent(context.Background(), req)
 	if err != nil {

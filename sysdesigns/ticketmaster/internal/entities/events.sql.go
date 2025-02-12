@@ -21,7 +21,7 @@ RETURNING id, name, description, added_by, venue_id, event_date, created_at
 type CreateEventParams struct {
 	Name        string           `json:"name"`
 	Description string           `json:"description"`
-	AddedBy     uuid.UUID        `json:"added_by"`
+	AddedBy *uuid.UUID        `json:"added_by"`
 	VenueID     uuid.UUID        `json:"venue_id"`
 	EventDate   pgtype.Timestamp `json:"event_date"`
 }

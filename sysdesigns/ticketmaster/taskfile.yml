@@ -5,6 +5,7 @@ tasks:
     desc: Generate Go code from SQL files
     cmds:
       - sqlc generate -f ./internal/db/sqlc.yml
+      - go run script/script.go
 
   migrate:
     desc: Run database migrations

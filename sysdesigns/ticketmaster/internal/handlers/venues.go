@@ -31,7 +31,7 @@ func (vh *VenueHandler) CreateVenue(c fiber.Ctx) error {
 	}
 
 	user := c.Locals("user").(entities.User)
-	req.AddedBy = user.ID
+	req.AddedBy = &user.ID
 
 	created, err := vh.VenueService.CreateVenue(context.Background(), req)
 	if err != nil {

@@ -21,9 +21,10 @@ type CreateVenueParams struct {
 	Name     string    `json:"name"`
 	Location string    `json:"location"`
 	Capacity int32     `json:"capacity"`
-	AddedBy  uuid.UUID `json:"added_by"`
+	AddedBy *uuid.UUID `json:"added_by"`
 }
 
+// @optional added_by
 func (q *Queries) CreateVenue(ctx context.Context, arg CreateVenueParams) (Venue, error) {
 	row := q.db.QueryRow(ctx, createVenue,
 		arg.Name,

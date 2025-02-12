@@ -23,17 +23,10 @@ Crypton is a simple blockchain implementation in Go, designed to provide a basic
 
 ## Usage
 
-### Add a Block
+`go run cmd/main.go get-balance --address ""`
 
-To add a block to the blockchain, use the add command:
-
-`go run cmd/main.go add -block ""`
-
-Example:
-`go run cmd/main.go add -block "Block 1 Data"`
-
-### Print the Blockchain
-
-To print all blocks in the blockchain, use the print command:
+`go run cmd/main.go create --address ""`
 
 `go run cmd/main.go print`
+
+`go run cmd/main.go send -from "FROM" -to "TO" -amount AMOUNT`

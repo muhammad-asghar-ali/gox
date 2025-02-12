@@ -27,32 +27,13 @@ Crypton is a simple blockchain implementation in Go, designed to provide a basic
 
 To add a block to the blockchain, use the add command:
 
-`go run main.go add -block ""`
+`go run cmd/main.go add -block ""`
 
 Example:
-`go run main.go add -block "Block 1 Data"`
+`go run cmd/main.go add -block "Block 1 Data"`
 
 ### Print the Blockchain
 
 To print all blocks in the blockchain, use the print command:
 
-`go run main.go print`
-
-## Contribution
-
-Contributions are welcome! Feel free to submit issues or pull requests.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-## Acknowledgments
-
-- [BadgerDB](https://github.com/dgraph-io/badger) for the storage engine.
-- The Go programming language.
-
-Feel free to explore and experiment with Crypton to learn more about blockchain technologies!
-
-```
-
-```
+`go run cmd/main.go print`

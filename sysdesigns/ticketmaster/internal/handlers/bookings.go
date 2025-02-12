@@ -13,6 +13,7 @@ import (
 type (
 	Booking interface {
 		CreateBooking(c fiber.Ctx) error
+		GetUserBookings(c fiber.Ctx) error
 	}
 
 	BookingHandler struct {
@@ -39,4 +40,15 @@ func (bh *BookingHandler) CreateBooking(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Booking created successfully"))
+}
+
+func (bh *BookingHandler) GetUserBookings(c fiber.Ctx) error {
+	user := c.Locals("user").(entities.User)
+
+	bookings, err := bh.BookingService.GetUserBookings(context.Background(), user.ID)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(bookings, "User Bookings fetched successfully"))
 }

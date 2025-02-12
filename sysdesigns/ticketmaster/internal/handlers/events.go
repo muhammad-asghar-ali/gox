@@ -13,6 +13,7 @@ import (
 type (
 	Event interface {
 		CreateEvent(c fiber.Ctx) error
+		ListEvent(c fiber.Ctx) error
 	}
 
 	EventHandler struct {
@@ -39,4 +40,13 @@ func (eh *EventHandler) CreateEvent(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Event add successfully"))
+}
+
+func (eh *EventHandler) ListEvent(c fiber.Ctx) error {
+	list, err := eh.EventService.ListEvent(context.Background())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(list, "Events fetched successfully"))
 }

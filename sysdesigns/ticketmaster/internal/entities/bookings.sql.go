@@ -46,3 +46,35 @@ func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) (B
 	)
 	return i, err
 }
+
+const getUserBookings = `-- name: GetUserBookings :many
+SELECT id, user_id, ticket_id, quantity, total_price, status, created_at FROM bookings WHERE user_id = $1
+`
+
+func (q *Queries) GetUserBookings(ctx context.Context, userID uuid.UUID) ([]Booking, error) {
+	rows, err := q.db.Query(ctx, getUserBookings, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Booking
+	for rows.Next() {
+		var i Booking
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.TicketID,
+			&i.Quantity,
+			&i.TotalPrice,
+			&i.Status,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

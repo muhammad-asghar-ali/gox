@@ -13,6 +13,7 @@ import (
 type (
 	Venue interface {
 		CreateVenue(c fiber.Ctx) error
+		ListVenue(c fiber.Ctx) error
 	}
 
 	VenueHandler struct {
@@ -39,4 +40,13 @@ func (vh *VenueHandler) CreateVenue(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Venue add successfully"))
+}
+
+func (vh *VenueHandler) ListVenue(c fiber.Ctx) error {
+	list, err := vh.VenueService.ListVenue(context.Background())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(list, "Venues fetched successfully"))
 }

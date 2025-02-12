@@ -43,3 +43,34 @@ func (q *Queries) CreateVenue(ctx context.Context, arg CreateVenueParams) (Venue
 	)
 	return i, err
 }
+
+const listVenue = `-- name: ListVenue :many
+SELECT id, name, location, capacity, added_by, created_at FROM venues
+`
+
+func (q *Queries) ListVenue(ctx context.Context) ([]Venue, error) {
+	rows, err := q.db.Query(ctx, listVenue)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Venue
+	for rows.Next() {
+		var i Venue
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Location,
+			&i.Capacity,
+			&i.AddedBy,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

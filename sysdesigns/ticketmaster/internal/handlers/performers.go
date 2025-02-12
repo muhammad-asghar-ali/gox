@@ -11,32 +11,29 @@ import (
 )
 
 type (
-	Event interface {
-		CreateEvent(c fiber.Ctx) error
+	Performer interface {
+		AddPerformer(c fiber.Ctx) error
 	}
 
-	EventHandler struct {
-		EventService services.EventService
+	PerformerHandler struct {
+		PerformerService services.PerformerService
 	}
 )
 
-func NewEventHandler(es services.EventService) Event {
-	return &EventHandler{EventService: es}
+func NewPerformerHandler(ps services.PerformerService) Performer {
+	return &PerformerHandler{PerformerService: ps}
 }
 
-func (eh *EventHandler) CreateEvent(c fiber.Ctx) error {
-	req := entities.CreateEventParams{}
+func (ph *PerformerHandler) AddPerformer(c fiber.Ctx) error {
+	req := entities.AddPerformerParams{}
 	if err := c.Bind().JSON(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	user := c.Locals("user").(entities.User)
-	req.AddedBy = user.ID
-
-	created, err := eh.EventService.CreateEvent(context.Background(), req)
+	created, err := ph.PerformerService.AddPerformer(context.Background(), req)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Event add successfully"))
+	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Performer add successfully"))
 }

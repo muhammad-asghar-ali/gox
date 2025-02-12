@@ -11,32 +11,29 @@ import (
 )
 
 type (
-	Event interface {
-		CreateEvent(c fiber.Ctx) error
+	Ticket interface {
+		CreateTicket(c fiber.Ctx) error
 	}
 
-	EventHandler struct {
-		EventService services.EventService
+	TicketHandler struct {
+		TicketService services.TicketService
 	}
 )
 
-func NewEventHandler(es services.EventService) Event {
-	return &EventHandler{EventService: es}
+func NewTicketHandler(ts services.TicketService) Ticket {
+	return &TicketHandler{TicketService: ts}
 }
 
-func (eh *EventHandler) CreateEvent(c fiber.Ctx) error {
-	req := entities.CreateEventParams{}
+func (th *TicketHandler) CreateTicket(c fiber.Ctx) error {
+	req := entities.CreateTicketParams{}
 	if err := c.Bind().JSON(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	user := c.Locals("user").(entities.User)
-	req.AddedBy = user.ID
-
-	created, err := eh.EventService.CreateEvent(context.Background(), req)
+	created, err := th.TicketService.CreateTicket(context.Background(), req)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Event add successfully"))
+	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Ticket created successfully"))
 }

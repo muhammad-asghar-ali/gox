@@ -33,8 +33,13 @@ func Auth(c fiber.Ctx) error {
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if ok && token.Valid {
-		user_id, ok := claims["user_id"].(uuid.UUID)
+		id, ok := claims["user_id"].(string)
 		if !ok {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": "Invalid token claims"})
+		}
+
+		user_id, err := uuid.Parse(id)
+		if err != nil {
 			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"message": "Invalid token claims"})
 		}
 

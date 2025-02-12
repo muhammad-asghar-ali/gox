@@ -42,12 +42,12 @@ func (us *UserService) Login(ctx context.Context, req *common.LoginRequest) (*co
 		return nil, err
 	}
 
-	access, err := common.AccessToken(user.ID.String())
+	access, err := common.AccessToken(user.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	refresh, err := common.RefreshToken(user.ID.String())
+	refresh, err := common.RefreshToken(user.ID)
 	if err != nil {
 		return nil, err
 	}

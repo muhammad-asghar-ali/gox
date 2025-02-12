@@ -22,9 +22,21 @@ func SetupRoutes(app *fiber.App) {
 	// ---------------- VENUES
 	venue := handlers.NewVenueHandler(services.VenueService{})
 	app.Use(middlewares.Auth)
-	app.Get("/venues", venue.CreateVenue)
+	api.Post("/venues", venue.CreateVenue)
 
 	// ---------------- EVENTS
 	event := handlers.NewEventHandler(services.EventService{})
-	app.Get("/events", event.CreateEvent)
+	api.Post("/events", event.CreateEvent)
+
+	// ---------------- PERFORMERS
+	performer := handlers.NewPerformerHandler(services.PerformerService{})
+	api.Post("/performers", performer.AddPerformer)
+
+	// ---------------- BOOKINGS
+	booking := handlers.NewBookingHandler(services.BookingService{})
+	api.Post("/bookings", booking.CreateBooking)
+
+	// ---------------- TICKETS
+	ticket := handlers.NewTicketHandler(services.TicketService{})
+	api.Post("/tickets", ticket.CreateTicket)
 }

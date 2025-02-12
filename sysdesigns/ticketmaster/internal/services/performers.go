@@ -20,10 +20,10 @@ func NewPerformerService() PerformerActions {
 }
 
 func (ps *PerformerService) AddPerformer(ctx context.Context, req entities.AddPerformerParams) (*entities.Performer, error) {
-	e, err := db.Queries().AddPerformer(ctx, req)
+	p, err := db.Queries().AddPerformer(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	return &e, nil
+	return &p, nil
 }

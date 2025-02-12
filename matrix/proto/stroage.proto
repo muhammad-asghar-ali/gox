@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package pb;
+
+import "memory.proto";
+
+enum Driver {
+  DRIVER_UNSPECIFIED = 0;
+  DRIVER_HDD = 1;
+  DRIVER_SSD = 2;
+}
+
+message Stroage {
+  Driver driver = 1;
+  Memory memory = 2;
+}

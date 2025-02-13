@@ -33,3 +33,33 @@ func (q *Queries) AddPerformer(ctx context.Context, arg AddPerformerParams) (Per
 	)
 	return i, err
 }
+
+const listPerformer = `-- name: ListPerformer :many
+SELECT id, name, genre, bio, created_at FROM performers
+`
+
+func (q *Queries) ListPerformer(ctx context.Context) ([]Performer, error) {
+	rows, err := q.db.Query(ctx, listPerformer)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Performer
+	for rows.Next() {
+		var i Performer
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Genre,
+			&i.Bio,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

@@ -33,6 +33,7 @@ func SetupRoutes(app *fiber.App) {
 	// ---------------- PERFORMERS
 	performer := handlers.NewPerformerHandler(services.PerformerService{})
 	api.Post("/performers", performer.AddPerformer)
+	api.Get("/performers", performer.ListPerformer)
 
 	// ---------------- BOOKINGS
 	booking := handlers.NewBookingHandler(services.BookingService{})

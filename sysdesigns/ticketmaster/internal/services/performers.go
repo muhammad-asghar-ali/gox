@@ -10,6 +10,7 @@ import (
 type (
 	PerformerActions interface {
 		AddPerformer(ctx context.Context, req entities.AddPerformerParams) (*entities.Performer, error)
+		ListPerformer(ctx context.Context) ([]entities.Performer, error)
 	}
 
 	PerformerService struct{}
@@ -26,4 +27,13 @@ func (ps *PerformerService) AddPerformer(ctx context.Context, req entities.AddPe
 	}
 
 	return &p, nil
+}
+
+func (ps *PerformerService) ListPerformer(ctx context.Context) ([]entities.Performer, error) {
+	ls, err := db.Queries().ListPerformer(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return ls, nil
 }

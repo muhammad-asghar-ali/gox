@@ -13,6 +13,7 @@ import (
 type (
 	Performer interface {
 		AddPerformer(c fiber.Ctx) error
+		ListPerformer(c fiber.Ctx) error
 	}
 
 	PerformerHandler struct {
@@ -36,4 +37,13 @@ func (ph *PerformerHandler) AddPerformer(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(created, "Performer add successfully"))
+}
+
+func (ph *PerformerHandler) ListPerformer(c fiber.Ctx) error {
+	list, err := ph.PerformerService.ListPerformer(context.Background())
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	return c.Status(fiber.StatusCreated).JSON(common.NewSuccessResponse(list, "Performers fetched successfully"))
 }

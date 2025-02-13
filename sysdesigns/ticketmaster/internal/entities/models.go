@@ -11,10 +11,10 @@ import (
 
 type Booking struct {
 	ID         uuid.UUID        `json:"id"`
-	UserID *uuid.UUID        `json:"user_id"`
+	UserID     *uuid.UUID       `json:"user_id"`
 	TicketID   uuid.UUID        `json:"ticket_id"`
 	Quantity   int32            `json:"quantity"`
-	TotalPrice pgtype.Numeric   `json:"total_price"`
+	TotalPrice float64          `json:"total_price"`
 	Status     string           `json:"status"`
 	CreatedAt  pgtype.Timestamp `json:"created_at"`
 }
@@ -23,7 +23,7 @@ type Event struct {
 	ID          uuid.UUID        `json:"id"`
 	Name        string           `json:"name"`
 	Description string           `json:"description"`
-	AddedBy *uuid.UUID        `json:"added_by"`
+	AddedBy     *uuid.UUID       `json:"added_by"`
 	VenueID     uuid.UUID        `json:"venue_id"`
 	EventDate   pgtype.Timestamp `json:"event_date"`
 	CreatedAt   pgtype.Timestamp `json:"created_at"`
@@ -38,8 +38,8 @@ type EventPerformer struct {
 type Payment struct {
 	ID            uuid.UUID        `json:"id"`
 	BookingID     uuid.UUID        `json:"booking_id"`
-	UserID *uuid.UUID        `json:"user_id"`
-	Amount        pgtype.Numeric   `json:"amount"`
+	UserID        *uuid.UUID       `json:"user_id"`
+	Amount        float64          `json:"amount"`
 	PaymentMethod string           `json:"payment_method"`
 	Status        string           `json:"status"`
 	CreatedAt     pgtype.Timestamp `json:"created_at"`
@@ -57,7 +57,7 @@ type Ticket struct {
 	ID               uuid.UUID        `json:"id"`
 	EventID          uuid.UUID        `json:"event_id"`
 	TicketType       string           `json:"ticket_type"`
-	Price            pgtype.Numeric   `json:"price"`
+	Price            float64          `json:"price"`
 	TotalTickets     int32            `json:"total_tickets"`
 	AvailableTickets int32            `json:"available_tickets"`
 	CreatedAt        pgtype.Timestamp `json:"created_at"`
@@ -78,6 +78,6 @@ type Venue struct {
 	Name      string           `json:"name"`
 	Location  string           `json:"location"`
 	Capacity  int32            `json:"capacity"`
-	AddedBy *uuid.UUID        `json:"added_by"`
+	AddedBy   *uuid.UUID       `json:"added_by"`
 	CreatedAt pgtype.Timestamp `json:"created_at"`
 }

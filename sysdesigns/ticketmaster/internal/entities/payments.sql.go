@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createPayment = `-- name: CreatePayment :one
@@ -19,11 +18,11 @@ RETURNING id, booking_id, user_id, amount, payment_method, status, created_at
 `
 
 type CreatePaymentParams struct {
-	BookingID     uuid.UUID      `json:"booking_id"`
-	UserID *uuid.UUID      `json:"user_id"`
-	Amount        pgtype.Numeric `json:"amount"`
-	PaymentMethod string         `json:"payment_method"`
-	Status        string         `json:"status"`
+	BookingID     uuid.UUID  `json:"booking_id"`
+	UserID        *uuid.UUID `json:"user_id"`
+	Amount        float64    `json:"amount"`
+	PaymentMethod string     `json:"payment_method"`
+	Status        string     `json:"status"`
 }
 
 func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (Payment, error) {

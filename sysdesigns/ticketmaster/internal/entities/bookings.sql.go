@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createBooking = `-- name: CreateBooking :one
@@ -19,11 +18,11 @@ RETURNING id, user_id, ticket_id, quantity, total_price, status, created_at
 `
 
 type CreateBookingParams struct {
-	UserID *uuid.UUID      `json:"user_id"`
-	TicketID   uuid.UUID      `json:"ticket_id"`
-	Quantity   int32          `json:"quantity"`
-	TotalPrice pgtype.Numeric `json:"total_price"`
-	Status     string         `json:"status"`
+	UserID     *uuid.UUID `json:"user_id"`
+	TicketID   uuid.UUID  `json:"ticket_id"`
+	Quantity   int32      `json:"quantity"`
+	TotalPrice float64    `json:"total_price"`
+	Status     string     `json:"status"`
 }
 
 // @optional user_id

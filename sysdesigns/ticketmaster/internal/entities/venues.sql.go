@@ -18,10 +18,10 @@ RETURNING id, name, location, capacity, added_by, created_at
 `
 
 type CreateVenueParams struct {
-	Name     string    `json:"name"`
-	Location string    `json:"location"`
-	Capacity int32     `json:"capacity"`
-	AddedBy *uuid.UUID `json:"added_by"`
+	Name     string     `json:"name"`
+	Location string     `json:"location"`
+	Capacity int32      `json:"capacity"`
+	AddedBy  *uuid.UUID `json:"added_by"`
 }
 
 // @optional added_by

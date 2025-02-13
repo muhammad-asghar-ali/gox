@@ -9,7 +9,6 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createTicket = `-- name: CreateTicket :one
@@ -19,11 +18,11 @@ RETURNING id, event_id, ticket_type, price, total_tickets, available_tickets, cr
 `
 
 type CreateTicketParams struct {
-	EventID          uuid.UUID      `json:"event_id"`
-	TicketType       string         `json:"ticket_type"`
-	Price            pgtype.Numeric `json:"price"`
-	TotalTickets     int32          `json:"total_tickets"`
-	AvailableTickets int32          `json:"available_tickets"`
+	EventID          uuid.UUID `json:"event_id"`
+	TicketType       string    `json:"ticket_type"`
+	Price            float64   `json:"price"`
+	TotalTickets     int32     `json:"total_tickets"`
+	AvailableTickets int32     `json:"available_tickets"`
 }
 
 func (q *Queries) CreateTicket(ctx context.Context, arg CreateTicketParams) (Ticket, error) {

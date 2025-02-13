@@ -1,0 +1,17 @@
+meta {
+  name: shorten
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8000/api/v1/shorten
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "long_url":"https://www.google.com/search?q=nvidia+stock+loss&sca_esv=8b8c4f88fc4c1aa0&hl=en&ei=2pqYZ-6bOeT02roPqLL7wAw&ved=0ahUKEwju8JyHhZiLAxVkulYBHSjZHsgQ4dUDCBA&uact=5&oq=nvidia+stock+loss&gs_lp=Egxnd3Mtd2l6LXNlcnAiEW52aWRpYSBzdG9jayBsb3NzMgUQABiABDIFEAAYgAQyBhAAGBYYHjIGEAAYFhgeMgYQABgWGB4yBhAAGBYYHjILEAAYgAQYhgMYigUyCxAAGIAEGIYDGIoFMgsQABiABBiGAxiKBTILEAAYgAQYhgMYigVI8SNQbljJHnABeAGQAQCYAd8DoAHMEaoBAzQtNbgBA8gBAPgBAZgCBqAC7BHCAgoQABiwAxjWBBhHwgINEAAYgAQYsAMYQxiKBcICEBAAGIAEGLEDGEMYgwEYigXCAgsQABiABBixAxiDAcICChAAGIAEGEMYigXCAgQQABgDwgIREAAYgAQYkQIYsQMYgwEYigXCAgsQABiABBiRAhiKBcICBxAAGIAEGAqYAwCIBgGQBgqSBwUxLjQtNaAH8B0&sclient=gws-wiz-serp"
+  }
+}

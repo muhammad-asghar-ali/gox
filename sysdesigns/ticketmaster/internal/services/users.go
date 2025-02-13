@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common"
+	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common/types"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/db"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/entities"
 )
@@ -11,7 +12,7 @@ import (
 type (
 	UserActions interface {
 		Create(ctx context.Context, req *entities.CreateUserParams) (*entities.User, error)
-		Login(ctx context.Context, req *common.LoginRequest) (*common.LoginResponse, error)
+		Login(ctx context.Context, req *types.LoginRequest) (*types.LoginResponse, error)
 		FindUserByEmail(ctx context.Context, email string) (*entities.User, error)
 	}
 
@@ -32,7 +33,7 @@ func (us *UserService) Create(ctx context.Context, req *entities.CreateUserParam
 	return &user, nil
 }
 
-func (us *UserService) Login(ctx context.Context, req *common.LoginRequest) (*common.LoginResponse, error) {
+func (us *UserService) Login(ctx context.Context, req *types.LoginRequest) (*types.LoginResponse, error) {
 	user, err := db.Queries().FindUserByEmail(ctx, req.Email)
 	if err != nil {
 		return nil, err
@@ -52,7 +53,7 @@ func (us *UserService) Login(ctx context.Context, req *common.LoginRequest) (*co
 		return nil, err
 	}
 
-	res := &common.LoginResponse{
+	res := &types.LoginResponse{
 		AccessToken:  access,
 		RefreshToken: refresh,
 	}

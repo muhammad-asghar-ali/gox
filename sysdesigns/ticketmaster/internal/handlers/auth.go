@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v3"
 
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common"
+	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common/types"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/entities"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/services"
 )
@@ -40,7 +41,7 @@ func (uh *AuthHandler) Register(c fiber.Ctx) error {
 }
 
 func (uh *AuthHandler) Login(c fiber.Ctx) error {
-	req := common.LoginRequest{}
+	req := types.LoginRequest{}
 	if err := c.Bind().JSON(&req); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
 	}

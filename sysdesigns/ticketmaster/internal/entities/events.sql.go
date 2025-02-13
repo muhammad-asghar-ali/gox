@@ -47,6 +47,55 @@ func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event
 	return i, err
 }
 
+const getEventByID = `-- name: GetEventByID :one
+SELECT 
+    e.id, e.name, e.description, e.added_by, e.venue_id, e.event_date, e.created_at, 
+    t.id, t.event_id, t.ticket_type, t.price, t.total_tickets, t.available_tickets, t.created_at,
+    JSON_AGG(
+        JSON_BUILD_OBJECT(
+            'performer_id', p.id,
+            'performer_name', p.name,
+            'genre', p.genre,
+            'bio', p.bio
+        )
+    ) AS performers
+FROM events e
+INNER JOIN tickets t ON t.event_id = e.id
+INNER JOIN event_performers ep ON ep.event_id = e.id
+INNER JOIN performers p ON p.id = ep.performer_id
+WHERE e.id = $1
+GROUP BY e.id, t.id
+`
+
+type GetEventByIDRow struct {
+	Event      Event  `json:"event"`
+	Ticket     Ticket `json:"ticket"`
+	Performers []byte `json:"performers"`
+}
+
+func (q *Queries) GetEventByID(ctx context.Context, id uuid.UUID) (GetEventByIDRow, error) {
+	row := q.db.QueryRow(ctx, getEventByID, id)
+	var i GetEventByIDRow
+	err := row.Scan(
+		&i.Event.ID,
+		&i.Event.Name,
+		&i.Event.Description,
+		&i.Event.AddedBy,
+		&i.Event.VenueID,
+		&i.Event.EventDate,
+		&i.Event.CreatedAt,
+		&i.Ticket.ID,
+		&i.Ticket.EventID,
+		&i.Ticket.TicketType,
+		&i.Ticket.Price,
+		&i.Ticket.TotalTickets,
+		&i.Ticket.AvailableTickets,
+		&i.Ticket.CreatedAt,
+		&i.Performers,
+	)
+	return i, err
+}
+
 const listEvent = `-- name: ListEvent :many
 SELECT id, name, description, added_by, venue_id, event_date, created_at FROM events
 `

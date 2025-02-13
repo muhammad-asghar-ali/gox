@@ -37,7 +37,7 @@ func SetupRoutes(app *fiber.App) {
 	// ---------------- BOOKINGS
 	booking := handlers.NewBookingHandler(services.BookingService{})
 	api.Post("/bookings", booking.CreateBooking)
-	api.Post("/users/bookings", booking.CreateBooking)
+	api.Get("/users/bookings", booking.GetUserBookings)
 
 	// ---------------- TICKETS
 	ticket := handlers.NewTicketHandler(services.TicketService{})

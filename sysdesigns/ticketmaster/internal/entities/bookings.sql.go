@@ -19,13 +19,14 @@ RETURNING id, user_id, ticket_id, quantity, total_price, status, created_at
 `
 
 type CreateBookingParams struct {
-	UserID     uuid.UUID      `json:"user_id"`
+	UserID *uuid.UUID      `json:"user_id"`
 	TicketID   uuid.UUID      `json:"ticket_id"`
 	Quantity   int32          `json:"quantity"`
 	TotalPrice pgtype.Numeric `json:"total_price"`
 	Status     string         `json:"status"`
 }
 
+// @optional user_id
 func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) (Booking, error) {
 	row := q.db.QueryRow(ctx, createBooking,
 		arg.UserID,
@@ -51,7 +52,7 @@ const getUserBookings = `-- name: GetUserBookings :many
 SELECT id, user_id, ticket_id, quantity, total_price, status, created_at FROM bookings WHERE user_id = $1
 `
 
-func (q *Queries) GetUserBookings(ctx context.Context, userID uuid.UUID) ([]Booking, error) {
+func (q *Queries) GetUserBookings(ctx context.Context, userID *uuid.UUID) ([]Booking, error) {
 	rows, err := q.db.Query(ctx, getUserBookings, userID)
 	if err != nil {
 		return nil, err

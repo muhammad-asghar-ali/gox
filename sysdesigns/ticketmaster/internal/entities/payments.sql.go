@@ -20,7 +20,7 @@ RETURNING id, booking_id, user_id, amount, payment_method, status, created_at
 
 type CreatePaymentParams struct {
 	BookingID     uuid.UUID      `json:"booking_id"`
-	UserID        uuid.UUID      `json:"user_id"`
+	UserID *uuid.UUID      `json:"user_id"`
 	Amount        pgtype.Numeric `json:"amount"`
 	PaymentMethod string         `json:"payment_method"`
 	Status        string         `json:"status"`

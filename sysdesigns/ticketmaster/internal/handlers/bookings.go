@@ -32,7 +32,7 @@ func (bh *BookingHandler) CreateBooking(c fiber.Ctx) error {
 	}
 
 	user := c.Locals("user").(entities.User)
-	req.UserID = user.ID
+	req.UserID = &user.ID
 
 	created, err := bh.BookingService.CreateBooking(context.Background(), req)
 	if err != nil {
@@ -45,7 +45,7 @@ func (bh *BookingHandler) CreateBooking(c fiber.Ctx) error {
 func (bh *BookingHandler) GetUserBookings(c fiber.Ctx) error {
 	user := c.Locals("user").(entities.User)
 
-	bookings, err := bh.BookingService.GetUserBookings(context.Background(), user.ID)
+	bookings, err := bh.BookingService.GetUserBookings(context.Background(), &user.ID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
 	}

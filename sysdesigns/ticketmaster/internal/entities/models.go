@@ -11,7 +11,7 @@ import (
 
 type Booking struct {
 	ID         uuid.UUID        `json:"id"`
-	UserID     uuid.UUID        `json:"user_id"`
+	UserID *uuid.UUID        `json:"user_id"`
 	TicketID   uuid.UUID        `json:"ticket_id"`
 	Quantity   int32            `json:"quantity"`
 	TotalPrice pgtype.Numeric   `json:"total_price"`
@@ -38,7 +38,7 @@ type EventPerformer struct {
 type Payment struct {
 	ID            uuid.UUID        `json:"id"`
 	BookingID     uuid.UUID        `json:"booking_id"`
-	UserID        uuid.UUID        `json:"user_id"`
+	UserID *uuid.UUID        `json:"user_id"`
 	Amount        pgtype.Numeric   `json:"amount"`
 	PaymentMethod string           `json:"payment_method"`
 	Status        string           `json:"status"`

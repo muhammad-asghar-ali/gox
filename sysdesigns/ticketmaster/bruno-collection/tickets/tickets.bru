@@ -1,0 +1,25 @@
+meta {
+  name: tickets
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:7001/api/tickets
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk1MTU5MjIsInVzZXJfaWQiOiIzMDRiY2NkZS1lYmE0LTQyYTItOTkyZi04NDRkN2Y5OWY0OGQifQ.iez1Zlx2hhjr6IYNV2rw35E3pyI7oI78mTDmQ7PJ89Q
+}
+
+body:json {
+  {
+    "event_id": "23aa565d-74a8-4bc3-b040-9ed857d7dca5",
+    "ticket_type": "abc",
+    "price": 1000,
+    "total_tickets": 500,
+    "available_tickets": 499
+  }
+}

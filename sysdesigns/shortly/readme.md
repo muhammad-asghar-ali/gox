@@ -99,7 +99,7 @@ Shortly is a URL shortening service that converts long URLs into shorter, manage
        In inital stage we need only two tables which are store data. One is to store the user related database and the other table store the information about url.
 
        1. users
-       1. url_store
+       2. url_store
 
        ![Database Design](database_design.png)
 

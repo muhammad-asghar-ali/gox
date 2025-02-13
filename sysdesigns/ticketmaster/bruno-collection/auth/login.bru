@@ -1,0 +1,18 @@
+meta {
+  name: login
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:7001/api/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "asgr@local.io",
+    "password": "asgr"
+  }
+}

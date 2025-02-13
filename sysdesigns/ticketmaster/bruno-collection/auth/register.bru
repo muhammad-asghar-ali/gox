@@ -1,0 +1,20 @@
+meta {
+  name: register
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:7001/api/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "asgr",
+    "email": "asgr@local.io",
+    "password": "asgr",
+    "phone": "0000000000"
+  }
+}

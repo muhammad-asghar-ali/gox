@@ -16,3 +16,14 @@ func ByteToPerformers(row []byte) ([]types.Performer, error) {
 
 	return performers, nil
 }
+
+func ByteToTickets(row []byte) ([]types.Ticket, error) {
+	tickets := make([]types.Ticket, 0)
+
+	err := json.Unmarshal(row, &tickets)
+	if err != nil {
+		return nil, err
+	}
+
+	return tickets, nil
+}

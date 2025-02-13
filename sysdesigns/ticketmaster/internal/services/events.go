@@ -53,9 +53,15 @@ func (es *EventService) GetEventByID(ctx context.Context, id uuid.UUID) (*types.
 		return nil, err
 	}
 
+	ts, err := conv.ByteToTickets(event.Tickets)
+	if err != nil {
+		return nil, err
+	}
+
 	res := &types.GetEventByID{
 		Event:      event.Event,
-		Ticket:     event.Ticket,
+		Venue:      event.Venue,
+		Ticket:     ts,
 		Performers: ps,
 	}
 

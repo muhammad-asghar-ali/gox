@@ -49,28 +49,39 @@ func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event
 
 const getEventByID = `-- name: GetEventByID :one
 SELECT 
-    e.id, e.name, e.description, e.added_by, e.venue_id, e.event_date, e.created_at, 
-    t.id, t.event_id, t.ticket_type, t.price, t.total_tickets, t.available_tickets, t.created_at,
+    e.id, e.name, e.description, e.added_by, e.venue_id, e.event_date, e.created_at,
+    v.id, v.name, v.location, v.capacity, v.added_by, v.created_at,
     JSON_AGG(
         JSON_BUILD_OBJECT(
-            'performer_id', p.id,
-            'performer_name', p.name,
+            'id', p.id,
+            'name', p.name,
             'genre', p.genre,
             'bio', p.bio
         )
-    ) AS performers
+    ) AS performers,
+    JSON_AGG(
+        JSON_BUILD_OBJECT(
+            'id', t.id,
+            'ticket_type', t.ticket_type,
+            'price', t.price,
+            'total_tickets', t.total_tickets,
+            'available_tickets', t.available_tickets
+        )
+    ) AS tickets
 FROM events e
+INNER JOIN venues v ON v.id = e.venue_id
 INNER JOIN tickets t ON t.event_id = e.id
 INNER JOIN event_performers ep ON ep.event_id = e.id
 INNER JOIN performers p ON p.id = ep.performer_id
 WHERE e.id = $1
-GROUP BY e.id, t.id
+GROUP BY e.id, t.id, v.id
 `
 
 type GetEventByIDRow struct {
 	Event      Event  `json:"event"`
-	Ticket     Ticket `json:"ticket"`
+	Venue      Venue  `json:"venue"`
 	Performers []byte `json:"performers"`
+	Tickets    []byte `json:"tickets"`
 }
 
 func (q *Queries) GetEventByID(ctx context.Context, id uuid.UUID) (GetEventByIDRow, error) {
@@ -84,14 +95,14 @@ func (q *Queries) GetEventByID(ctx context.Context, id uuid.UUID) (GetEventByIDR
 		&i.Event.VenueID,
 		&i.Event.EventDate,
 		&i.Event.CreatedAt,
-		&i.Ticket.ID,
-		&i.Ticket.EventID,
-		&i.Ticket.TicketType,
-		&i.Ticket.Price,
-		&i.Ticket.TotalTickets,
-		&i.Ticket.AvailableTickets,
-		&i.Ticket.CreatedAt,
+		&i.Venue.ID,
+		&i.Venue.Name,
+		&i.Venue.Location,
+		&i.Venue.Capacity,
+		&i.Venue.AddedBy,
+		&i.Venue.CreatedAt,
 		&i.Performers,
+		&i.Tickets,
 	)
 	return i, err
 }

@@ -18,16 +18,25 @@ type (
 )
 
 type (
-	Performer struct {
-		PerformerID   uuid.UUID `json:"performer_id"`
-		PerformerName string    `json:"performer_name"`
-		Genre         string    `json:"genre"`
-		Bio           string    `json:"bio"`
+	GetEventByID struct {
+		Event      entities.Event `json:"event"`
+		Venue      entities.Venue `json:"venue"`
+		Ticket     []Ticket       `json:"tickets"`
+		Performers []Performer    `json:"performers"`
 	}
 
-	GetEventByID struct {
-		Event      entities.Event  `json:"event"`
-		Ticket     entities.Ticket `json:"ticket"`
-		Performers []Performer     `json:"performers"`
+	Performer struct {
+		ID    uuid.UUID `json:"id"`
+		Name  string    `json:"name"`
+		Genre string    `json:"genre"`
+		Bio   string    `json:"bio"`
+	}
+
+	Ticket struct {
+		ID               uuid.UUID `json:"id"`
+		TicketType       string    `json:"ticket_type"`
+		Price            float64   `json:"price"`
+		TotalTickets     int32     `json:"total_tickets"`
+		AvailableTickets int32     `json:"available_tickets"`
 	}
 )

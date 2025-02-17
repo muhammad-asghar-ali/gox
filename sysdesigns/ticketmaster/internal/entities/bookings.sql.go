@@ -11,6 +11,66 @@ import (
 	"github.com/google/uuid"
 )
 
+const bookTicket = `-- name: BookTicket :exec
+WITH updated_ticket AS (
+    UPDATE tickets
+    SET available_tickets = available_tickets - $3
+    WHERE id = $1 AND available_tickets >= $3
+    RETURNING id
+)
+INSERT INTO bookings (id, user_id, ticket_id, quantity, total_price, status)
+SELECT $2, $4, $1, $3, $5, 'pending'
+FROM updated_ticket
+`
+
+type BookTicketParams struct {
+	TicketID   uuid.UUID  `json:"ticket_id"`
+	ID         uuid.UUID  `json:"id"`
+	Quantity   int32      `json:"quantity"`
+	UserID     *uuid.UUID `json:"user_id"`
+	TotalPrice float64    `json:"total_price"`
+}
+
+func (q *Queries) BookTicket(ctx context.Context, arg BookTicketParams) error {
+	_, err := q.db.Exec(ctx, bookTicket,
+		arg.TicketID,
+		arg.ID,
+		arg.Quantity,
+		arg.UserID,
+		arg.TotalPrice,
+	)
+	return err
+}
+
+const cancelBooking = `-- name: CancelBooking :exec
+WITH updated_booking AS (
+    UPDATE bookings
+    SET status = 'canceled'
+    WHERE bookings.id = $1 AND status != 'canceled'
+    RETURNING ticket_id, quantity
+)
+UPDATE tickets
+SET available_tickets = tickets.available_tickets + updated_booking.quantity
+FROM updated_booking
+WHERE tickets.id = updated_booking.ticket_id
+`
+
+func (q *Queries) CancelBooking(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, cancelBooking, id)
+	return err
+}
+
+const confirmBooking = `-- name: ConfirmBooking :exec
+UPDATE bookings
+SET status = 'confirmed'
+WHERE id = $1 AND status = 'pending'
+`
+
+func (q *Queries) ConfirmBooking(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, confirmBooking, id)
+	return err
+}
+
 const createBooking = `-- name: CreateBooking :one
 INSERT INTO bookings (user_id, ticket_id, quantity, total_price, status)
 VALUES ($1, $2, $3, $4, $5)
@@ -45,6 +105,19 @@ func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) (B
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const getBookingStatus = `-- name: GetBookingStatus :one
+SELECT status
+FROM bookings
+WHERE id = $1
+`
+
+func (q *Queries) GetBookingStatus(ctx context.Context, id uuid.UUID) (string, error) {
+	row := q.db.QueryRow(ctx, getBookingStatus, id)
+	var status string
+	err := row.Scan(&status)
+	return status, err
 }
 
 const getUserBookings = `-- name: GetUserBookings :many

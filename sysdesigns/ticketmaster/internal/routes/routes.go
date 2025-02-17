@@ -40,10 +40,14 @@ func SetupRoutes(app *fiber.App) {
 	booking := handlers.NewBookingHandler(services.BookingService{})
 	api.Post("/bookings", booking.CreateBooking)
 	api.Get("/users/bookings", booking.GetUserBookings)
+	api.Post("/bookings/ticket", booking.BookTicket)
+	api.Post("/bookings/confirm", booking.ConfirmBooking)
+	api.Post("/bookings/cancel", booking.CancelBooking)
 
 	// ---------------- TICKETS
 	ticket := handlers.NewTicketHandler(services.TicketService{})
 	api.Post("/tickets", ticket.CreateTicket)
+	api.Post("/tickets/available", ticket.GetAvailableTickets)
 
 	// ---------------- EVENT_PERFORMERS
 	event_performer := handlers.NewEventPerformerHandler(services.EventPerformerService{})

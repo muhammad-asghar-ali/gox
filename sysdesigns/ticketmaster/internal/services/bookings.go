@@ -2,8 +2,10 @@ package services
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
+	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common/enums"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/db"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/entities"
 )
@@ -12,6 +14,9 @@ type (
 	BookingActions interface {
 		CreateBooking(ctx context.Context, req entities.CreateBookingParams) (*entities.Booking, error)
 		GetUserBookings(ctx context.Context, userID *uuid.UUID) ([]entities.Booking, error)
+		BookTicket(ctx context.Context, req entities.BookTicketParams) error
+		ConfirmBooking(ctx context.Context, id uuid.UUID) error
+		CancelBooking(ctx context.Context, id uuid.UUID) error
 	}
 
 	BookingService struct{}
@@ -37,4 +42,46 @@ func (bs *BookingService) GetUserBookings(ctx context.Context, userID *uuid.UUID
 	}
 
 	return bookings, nil
+}
+
+func (bs *BookingService) BookTicket(ctx context.Context, req entities.BookTicketParams) error {
+	if err := db.Queries().BookTicket(ctx, req); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (bs *BookingService) ConfirmBooking(ctx context.Context, id uuid.UUID) error {
+	status, err := db.Queries().GetBookingStatus(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if status != enums.BookingStatusPending.String() {
+		return errors.New("unable to update booking status")
+	}
+
+	if err := db.Queries().ConfirmBooking(ctx, id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (bs *BookingService) CancelBooking(ctx context.Context, id uuid.UUID) error {
+	status, err := db.Queries().GetBookingStatus(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	if status != enums.BookingStatusPending.String() {
+		return errors.New("unable to update booking status")
+	}
+
+	if err := db.Queries().CancelBooking(ctx, id); err != nil {
+		return err
+	}
+
+	return nil
 }

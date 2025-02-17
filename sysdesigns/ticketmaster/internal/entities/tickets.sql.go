@@ -45,3 +45,16 @@ func (q *Queries) CreateTicket(ctx context.Context, arg CreateTicketParams) (Tic
 	)
 	return i, err
 }
+
+const getAvailableTickets = `-- name: GetAvailableTickets :one
+SELECT available_tickets
+FROM tickets
+WHERE id = $1
+`
+
+func (q *Queries) GetAvailableTickets(ctx context.Context, id uuid.UUID) (int32, error) {
+	row := q.db.QueryRow(ctx, getAvailableTickets, id)
+	var available_tickets int32
+	err := row.Scan(&available_tickets)
+	return available_tickets, err
+}

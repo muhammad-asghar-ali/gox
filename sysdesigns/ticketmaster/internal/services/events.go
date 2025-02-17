@@ -16,6 +16,7 @@ type (
 		CreateEvent(ctx context.Context, req entities.CreateEventParams) (*entities.Event, error)
 		ListEvent(ctx context.Context) ([]entities.Event, error)
 		GetEventByID(ctx context.Context, id uuid.UUID) (*types.GetEventByID, error)
+		SearchEvents(ctx context.Context, req types.SearchEvent) ([]entities.Event, error)
 	}
 
 	EventService struct{}
@@ -67,4 +68,16 @@ func (es *EventService) GetEventByID(ctx context.Context, id uuid.UUID) (*types.
 	}
 
 	return res, nil
+}
+
+func (es *EventService) SearchEvents(ctx context.Context, req types.SearchEvent) ([]entities.Event, error) {
+	args := conv.ConvertEventSearchParams(req)
+
+	// Execute the query
+	events, err := db.Queries().SearchEvents(ctx, args)
+	if err != nil {
+		return nil, err
+	}
+
+	return events, nil
 }

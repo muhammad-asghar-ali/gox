@@ -1,6 +1,8 @@
 package types
 
 import (
+	"time"
+
 	"github.com/google/uuid"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/entities"
 )
@@ -46,5 +48,15 @@ type (
 		Booking entities.Booking `json:"booking"`
 		Ticket  entities.Ticket  `json:"ticket"`
 		Payment entities.Payment `json:"payment"`
+	}
+)
+
+type (
+	SearchEvent struct {
+		Keyword  string    `josn:"keyword"`
+		Start    time.Time `json:"start_date"`
+		End      time.Time `json:"end_date"`
+		Page     int32     `json:"page"`
+		PageSize int32     `json:"page_size"`
 	}
 )

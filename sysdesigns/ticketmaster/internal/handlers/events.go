@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common"
+	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common/types"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/entities"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/services"
 )
@@ -16,6 +17,7 @@ type (
 		CreateEvent(c fiber.Ctx) error
 		ListEvent(c fiber.Ctx) error
 		GetEventByID(c fiber.Ctx) error
+		SearchEvents(c fiber.Ctx) error
 	}
 
 	EventHandler struct {
@@ -67,4 +69,18 @@ func (eh *EventHandler) GetEventByID(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(event, "Event fetched successfully"))
+}
+
+func (eh *EventHandler) SearchEvents(c fiber.Ctx) error {
+	req := types.SearchEvent{}
+	if err := c.Bind().JSON(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	list, err := eh.EventService.SearchEvents(context.Background(), req)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(list, "Searched events fetched successfully"))
 }

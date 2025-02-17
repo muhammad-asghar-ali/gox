@@ -138,3 +138,55 @@ func (q *Queries) ListEvent(ctx context.Context) ([]Event, error) {
 	}
 	return items, nil
 }
+
+const searchEvents = `-- name: SearchEvents :many
+SELECT id, name, description, added_by, venue_id, event_date, created_at
+FROM events
+WHERE (name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%')
+  AND event_date BETWEEN $2 AND $3
+ORDER BY event_date ASC
+LIMIT $4
+OFFSET $5
+`
+
+type SearchEventsParams struct {
+	Column1     pgtype.Text      `json:"column_1"`
+	EventDate   pgtype.Timestamp `json:"event_date"`
+	EventDate_2 pgtype.Timestamp `json:"event_date_2"`
+	Limit       int32            `json:"limit"`
+	Offset      int32            `json:"offset"`
+}
+
+func (q *Queries) SearchEvents(ctx context.Context, arg SearchEventsParams) ([]Event, error) {
+	rows, err := q.db.Query(ctx, searchEvents,
+		arg.Column1,
+		arg.EventDate,
+		arg.EventDate_2,
+		arg.Limit,
+		arg.Offset,
+	)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Event
+	for rows.Next() {
+		var i Event
+		if err := rows.Scan(
+			&i.ID,
+			&i.Name,
+			&i.Description,
+			&i.AddedBy,
+			&i.VenueID,
+			&i.EventDate,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}

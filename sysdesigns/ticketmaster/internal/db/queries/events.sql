@@ -35,5 +35,11 @@ INNER JOIN performers p ON p.id = ep.performer_id
 WHERE e.id = $1
 GROUP BY e.id, t.id, v.id;
 
-
-
+-- name: SearchEvents :many
+SELECT *
+FROM events
+WHERE (name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%')
+  AND event_date BETWEEN $2 AND $3
+ORDER BY event_date ASC
+LIMIT $4
+OFFSET $5;

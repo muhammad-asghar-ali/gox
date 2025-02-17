@@ -29,6 +29,7 @@ func SetupRoutes(app *fiber.App) {
 	event := handlers.NewEventHandler(services.EventService{})
 	api.Post("/events", event.CreateEvent)
 	api.Get("/events", event.ListEvent)
+	api.Get("/events/search", event.SearchEvents)
 	api.Get("/events/:id", event.GetEventByID)
 
 	// ---------------- PERFORMERS

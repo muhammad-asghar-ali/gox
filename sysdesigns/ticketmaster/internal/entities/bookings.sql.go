@@ -46,6 +46,12 @@ WITH updated_booking AS (
     SET status = 'canceled'
     WHERE bookings.id = $1 AND status != 'canceled'
     RETURNING ticket_id, quantity
+),
+updated_payment AS (
+    UPDATE payments
+    SET status = 'refunded'
+    WHERE payments.booking_id = $1 AND status = 'completed'
+    RETURNING amount
 )
 UPDATE tickets
 SET available_tickets = tickets.available_tickets + updated_booking.quantity
@@ -105,6 +111,52 @@ func (q *Queries) CreateBooking(ctx context.Context, arg CreateBookingParams) (B
 	return i, err
 }
 
+const getBookingByID = `-- name: GetBookingByID :one
+SELECT 
+    b.id, b.user_id, b.ticket_id, b.quantity, b.total_price, b.status, b.created_at,
+    t.id, t.event_id, t.ticket_type, t.price, t.total_tickets, t.available_tickets, t.created_at,
+    p.id, p.booking_id, p.user_id, p.amount, p.payment_method, p.status, p.created_at
+FROM bookings b
+LEFT JOIN tickets t ON b.ticket_id = t.id
+LEFT JOIN payments p ON b.id = p.booking_id
+WHERE b.id = $1
+`
+
+type GetBookingByIDRow struct {
+	Booking Booking `json:"booking"`
+	Ticket  Ticket  `json:"ticket"`
+	Payment Payment `json:"payment"`
+}
+
+func (q *Queries) GetBookingByID(ctx context.Context, id uuid.UUID) (GetBookingByIDRow, error) {
+	row := q.db.QueryRow(ctx, getBookingByID, id)
+	var i GetBookingByIDRow
+	err := row.Scan(
+		&i.Booking.ID,
+		&i.Booking.UserID,
+		&i.Booking.TicketID,
+		&i.Booking.Quantity,
+		&i.Booking.TotalPrice,
+		&i.Booking.Status,
+		&i.Booking.CreatedAt,
+		&i.Ticket.ID,
+		&i.Ticket.EventID,
+		&i.Ticket.TicketType,
+		&i.Ticket.Price,
+		&i.Ticket.TotalTickets,
+		&i.Ticket.AvailableTickets,
+		&i.Ticket.CreatedAt,
+		&i.Payment.ID,
+		&i.Payment.BookingID,
+		&i.Payment.UserID,
+		&i.Payment.Amount,
+		&i.Payment.PaymentMethod,
+		&i.Payment.Status,
+		&i.Payment.CreatedAt,
+	)
+	return i, err
+}
+
 const getBookingStatus = `-- name: GetBookingStatus :one
 SELECT status
 FROM bookings
@@ -116,6 +168,29 @@ func (q *Queries) GetBookingStatus(ctx context.Context, id uuid.UUID) (string, e
 	var status string
 	err := row.Scan(&status)
 	return status, err
+}
+
+const getLastBooking = `-- name: GetLastBooking :one
+SELECT id, user_id, ticket_id, quantity, total_price, status, created_at
+FROM bookings
+WHERE user_id = $1
+ORDER BY created_at DESC
+LIMIT 1
+`
+
+func (q *Queries) GetLastBooking(ctx context.Context, userID *uuid.UUID) (Booking, error) {
+	row := q.db.QueryRow(ctx, getLastBooking, userID)
+	var i Booking
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.TicketID,
+		&i.Quantity,
+		&i.TotalPrice,
+		&i.Status,
+		&i.CreatedAt,
+	)
+	return i, err
 }
 
 const getUserBookings = `-- name: GetUserBookings :many

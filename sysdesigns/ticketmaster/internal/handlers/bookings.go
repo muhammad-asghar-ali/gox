@@ -16,6 +16,7 @@ type (
 		CreateBooking(c fiber.Ctx) error
 		GetUserBookings(c fiber.Ctx) error
 		BookTicket(c fiber.Ctx) error
+		GetBookingByID(c fiber.Ctx) error
 		ConfirmBooking(c fiber.Ctx) error
 		CancelBooking(c fiber.Ctx) error
 	}
@@ -71,6 +72,22 @@ func (bh *BookingHandler) BookTicket(c fiber.Ctx) error {
 	}
 
 	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(true, "Ticket booked successfully"))
+}
+
+func (bh *BookingHandler) GetBookingByID(c fiber.Ctx) error {
+	param := c.Params("id")
+
+	id, err := uuid.Parse(param)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	booking, err := bh.BookingService.GetBookingByID(context.Background(), id)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
+	}
+
+	return c.Status(fiber.StatusOK).JSON(common.NewSuccessResponse(booking, "Booking fetched successfully"))
 }
 
 func (bh *BookingHandler) ConfirmBooking(c fiber.Ctx) error {

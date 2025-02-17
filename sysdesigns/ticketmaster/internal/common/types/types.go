@@ -40,3 +40,11 @@ type (
 		AvailableTickets int32     `json:"available_tickets"`
 	}
 )
+
+type (
+	GetBookingByID struct {
+		Booking entities.Booking `json:"booking"`
+		Ticket  entities.Ticket  `json:"ticket"`
+		Payment entities.Payment `json:"payment"`
+	}
+)

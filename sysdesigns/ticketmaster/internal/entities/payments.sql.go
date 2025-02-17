@@ -11,6 +11,23 @@ import (
 	"github.com/google/uuid"
 )
 
+const confirmPayment = `-- name: ConfirmPayment :exec
+WITH updated_payment AS (
+    UPDATE payments
+    SET status = 'completed'
+    WHERE payments.id = $1 AND status = 'pending'
+    RETURNING booking_id
+)
+UPDATE bookings
+SET status = 'confirmed'
+WHERE bookings.id = (SELECT booking_id FROM updated_payment)
+`
+
+func (q *Queries) ConfirmPayment(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, confirmPayment, id)
+	return err
+}
+
 const createPayment = `-- name: CreatePayment :one
 INSERT INTO payments (booking_id, user_id, amount, payment_method, status)
 VALUES ($1, $2, $3, $4, $5)
@@ -44,4 +61,21 @@ func (q *Queries) CreatePayment(ctx context.Context, arg CreatePaymentParams) (P
 		&i.CreatedAt,
 	)
 	return i, err
+}
+
+const failPayment = `-- name: FailPayment :exec
+WITH updated_payment AS (
+    UPDATE payments
+    SET status = 'failed'
+    WHERE payments.id = $1 AND status = 'pending'
+    RETURNING booking_id
+)
+UPDATE bookings
+SET status = 'canceled'
+WHERE bookings.id = (SELECT booking_id FROM updated_payment)
+`
+
+func (q *Queries) FailPayment(ctx context.Context, id uuid.UUID) error {
+	_, err := q.db.Exec(ctx, failPayment, id)
+	return err
 }

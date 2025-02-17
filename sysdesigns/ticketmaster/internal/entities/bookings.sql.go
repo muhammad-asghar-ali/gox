@@ -18,25 +18,23 @@ WITH updated_ticket AS (
     WHERE id = $1 AND available_tickets >= $3
     RETURNING id
 )
-INSERT INTO bookings (id, user_id, ticket_id, quantity, total_price, status)
-SELECT $2, $4, $1, $3, $5, 'pending'
+INSERT INTO bookings (user_id, ticket_id, quantity, total_price, status)
+SELECT $2, $1, $3, $4, 'pending'
 FROM updated_ticket
 `
 
 type BookTicketParams struct {
 	TicketID   uuid.UUID  `json:"ticket_id"`
-	ID         uuid.UUID  `json:"id"`
-	Quantity   int32      `json:"quantity"`
 	UserID     *uuid.UUID `json:"user_id"`
+	Quantity   int32      `json:"quantity"`
 	TotalPrice float64    `json:"total_price"`
 }
 
 func (q *Queries) BookTicket(ctx context.Context, arg BookTicketParams) error {
 	_, err := q.db.Exec(ctx, bookTicket,
 		arg.TicketID,
-		arg.ID,
-		arg.Quantity,
 		arg.UserID,
+		arg.Quantity,
 		arg.TotalPrice,
 	)
 	return err

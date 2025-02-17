@@ -1,11 +1,11 @@
 meta {
-  name: tickets
+  name: available tickets
   type: http
-  seq: 1
+  seq: 2
 }
 
-post {
-  url: http://localhost:7001/api/tickets
+get {
+  url: http://localhost:7001/api/tickets/available/1e44a472-4a23-4ffb-b556-b90ff4aa1b29
   body: json
   auth: bearer
 }

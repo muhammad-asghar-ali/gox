@@ -14,8 +14,8 @@ WITH updated_ticket AS (
     WHERE id = $1 AND available_tickets >= $3
     RETURNING id
 )
-INSERT INTO bookings (id, user_id, ticket_id, quantity, total_price, status)
-SELECT $2, $4, $1, $3, $5, 'pending'
+INSERT INTO bookings (user_id, ticket_id, quantity, total_price, status)
+SELECT $2, $1, $3, $4, 'pending'
 FROM updated_ticket;
 
 -- name: CancelBooking :exec

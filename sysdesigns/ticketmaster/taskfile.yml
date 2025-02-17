@@ -12,7 +12,7 @@ tasks:
     cmds:
       - go run ./internal/db/migrations
 
-  sqlc-numeric-to-float:
+  numeric-to-float:
     desc: Fix SQLC-generated Go files on macOS
     cmds:
       - |

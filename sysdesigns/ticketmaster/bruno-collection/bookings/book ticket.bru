@@ -1,12 +1,12 @@
 meta {
-  name: users bookings
+  name: book ticket
   type: http
-  seq: 2
+  seq: 3
 }
 
-get {
-  url: http://localhost:7001/api/users/bookings
-  body: none
+post {
+  url: http://localhost:7001/api/bookings/ticket
+  body: json
   auth: bearer
 }
 
@@ -16,7 +16,7 @@ auth:bearer {
 
 body:json {
   {
-    "ticket_id": "4141d5a9-9265-4be2-aeb4-2df27e10e3af",
+    "ticket_id": "2dde67fb-ca33-4057-8959-53950ca54400",
     "quantity": 2,
     "total_price": 2000,
     "status": "pending"

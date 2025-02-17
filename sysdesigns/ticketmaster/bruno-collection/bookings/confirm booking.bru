@@ -1,12 +1,12 @@
 meta {
-  name: users bookings
+  name: confirm booking
   type: http
-  seq: 2
+  seq: 4
 }
 
 get {
-  url: http://localhost:7001/api/users/bookings
-  body: none
+  url: http://localhost:7001/api/bookings/confirm/9cdf926b-3d88-4946-a69d-ef3be00aa33b
+  body: json
   auth: bearer
 }
 
@@ -16,7 +16,7 @@ auth:bearer {
 
 body:json {
   {
-    "ticket_id": "4141d5a9-9265-4be2-aeb4-2df27e10e3af",
+    "ticket_id": "1e44a472-4a23-4ffb-b556-b90ff4aa1b29",
     "quantity": 2,
     "total_price": 2000,
     "status": "pending"

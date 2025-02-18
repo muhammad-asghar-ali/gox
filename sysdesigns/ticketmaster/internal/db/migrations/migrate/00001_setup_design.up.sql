@@ -32,6 +32,8 @@ CREATE TABLE IF NOT EXISTS events (
   added_by UUID NOT NULL,
   venue_id UUID NOT NULL,
   event_date TIMESTAMP NOT NULL,
+  total_tickets INT NOT NULL,
+  available_tickets INT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW() NOT NULL,
   FOREIGN KEY (added_by) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (venue_id) REFERENCES venues(id) ON DELETE CASCADE

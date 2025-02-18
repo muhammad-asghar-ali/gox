@@ -12,11 +12,19 @@ WITH updated_ticket AS (
     UPDATE tickets
     SET available_tickets = available_tickets - $3
     WHERE id = $1 AND available_tickets >= $3
-    RETURNING id
+    RETURNING id, event_id, available_tickets
+),
+updated_event AS (
+    UPDATE events
+    SET available_tickets = available_tickets - $3
+    WHERE id = (SELECT event_id FROM updated_ticket)
+    AND available_tickets >= $3
+    RETURNING id, available_tickets
 )
 INSERT INTO bookings (user_id, ticket_id, quantity, total_price, status)
 SELECT $2, $1, $3, $4, 'pending'
-FROM updated_ticket;
+FROM updated_ticket
+WHERE EXISTS (SELECT 1 FROM updated_event);
 
 -- name: GetLastBooking :one
 SELECT *

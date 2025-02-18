@@ -1,6 +1,6 @@
 -- name: CreateEvent :one
-INSERT INTO events (name, description, added_by, venue_id, event_date)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO events (name, description, added_by, venue_id, event_date, total_tickets, available_tickets)
+VALUES ($1, $2, $3, $4, $5, $6, $6)
 RETURNING *;
 
 -- name: ListEvent :many
@@ -29,9 +29,9 @@ SELECT
     ) AS tickets
 FROM events e
 INNER JOIN venues v ON v.id = e.venue_id
-INNER JOIN tickets t ON t.event_id = e.id
-INNER JOIN event_performers ep ON ep.event_id = e.id
-INNER JOIN performers p ON p.id = ep.performer_id
+LEFT JOIN tickets t ON t.event_id = e.id
+LEFT JOIN event_performers ep ON ep.event_id = e.id
+LEFT JOIN performers p ON p.id = ep.performer_id
 WHERE e.id = $1
 GROUP BY e.id, t.id, v.id;
 

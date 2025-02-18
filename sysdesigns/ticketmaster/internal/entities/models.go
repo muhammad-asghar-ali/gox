@@ -20,13 +20,15 @@ type Booking struct {
 }
 
 type Event struct {
-	ID          uuid.UUID        `json:"id"`
-	Name        string           `json:"name"`
-	Description string           `json:"description"`
-	AddedBy     *uuid.UUID       `json:"added_by"`
-	VenueID     uuid.UUID        `json:"venue_id"`
-	EventDate   pgtype.Timestamp `json:"event_date"`
-	CreatedAt   pgtype.Timestamp `json:"created_at"`
+	ID               uuid.UUID        `json:"id"`
+	Name             string           `json:"name"`
+	Description      string           `json:"description"`
+	AddedBy          *uuid.UUID       `json:"added_by"`
+	VenueID          uuid.UUID        `json:"venue_id"`
+	EventDate        pgtype.Timestamp `json:"event_date"`
+	TotalTickets     int32            `json:"total_tickets"`
+	AvailableTickets int32            `json:"available_tickets"`
+	CreatedAt        pgtype.Timestamp `json:"created_at"`
 }
 
 type EventPerformer struct {

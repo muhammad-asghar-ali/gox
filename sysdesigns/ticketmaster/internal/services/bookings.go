@@ -48,30 +48,39 @@ func (bs *BookingService) GetUserBookings(ctx context.Context, userID *uuid.UUID
 }
 
 func (bs *BookingService) BookTicket(ctx context.Context, req entities.BookTicketParams) error {
-	if err := db.Queries().BookTicket(ctx, req); err != nil {
-		return err
-	}
-
-	booking, err := db.Queries().GetLastBooking(ctx, req.UserID)
+	check, err := db.Queries().GetRemainingTickets(ctx, req.TicketID)
 	if err != nil {
-		return err
+		return nil
 	}
 
-	preq := entities.CreatePaymentParams{
-		BookingID:     booking.ID,
-		UserID:        booking.UserID,
-		Amount:        req.TotalPrice,
-		PaymentMethod: enums.PaymentMethodCreditCard.String(),
-		Status:        enums.PaymentStatusPending.String(),
+	if check.EventAvailable >= req.Quantity && check.TicketAvailable >= req.Quantity {
+		if err := db.Queries().BookTicket(ctx, req); err != nil {
+			return err
+		}
+
+		booking, err := db.Queries().GetLastBooking(ctx, req.UserID)
+		if err != nil {
+			return err
+		}
+
+		preq := entities.CreatePaymentParams{
+			BookingID:     booking.ID,
+			UserID:        booking.UserID,
+			Amount:        req.TotalPrice,
+			PaymentMethod: enums.PaymentMethodCreditCard.String(),
+			Status:        enums.PaymentStatusPending.String(),
+		}
+
+		// create payment
+		_, err = db.Queries().CreatePayment(ctx, preq)
+		if err != nil {
+			return err
+		}
+
+		return nil
 	}
 
-	// create payment
-	_, err = db.Queries().CreatePayment(ctx, preq)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return errors.New("tickets are not available")
 }
 
 func (bs *BookingService) GetBookingByID(ctx context.Context, id uuid.UUID) (*types.GetBookingByID, error) {

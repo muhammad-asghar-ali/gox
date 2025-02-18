@@ -13,17 +13,18 @@ import (
 )
 
 const createEvent = `-- name: CreateEvent :one
-INSERT INTO events (name, description, added_by, venue_id, event_date)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING id, name, description, added_by, venue_id, event_date, created_at
+INSERT INTO events (name, description, added_by, venue_id, event_date, total_tickets, available_tickets)
+VALUES ($1, $2, $3, $4, $5, $6, $6)
+RETURNING id, name, description, added_by, venue_id, event_date, total_tickets, available_tickets, created_at
 `
 
 type CreateEventParams struct {
-	Name        string           `json:"name"`
-	Description string           `json:"description"`
-	AddedBy     *uuid.UUID       `json:"added_by"`
-	VenueID     uuid.UUID        `json:"venue_id"`
-	EventDate   pgtype.Timestamp `json:"event_date"`
+	Name         string           `json:"name"`
+	Description  string           `json:"description"`
+	AddedBy      *uuid.UUID       `json:"added_by"`
+	VenueID      uuid.UUID        `json:"venue_id"`
+	EventDate    pgtype.Timestamp `json:"event_date"`
+	TotalTickets int32            `json:"total_tickets"`
 }
 
 func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event, error) {
@@ -33,6 +34,7 @@ func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event
 		arg.AddedBy,
 		arg.VenueID,
 		arg.EventDate,
+		arg.TotalTickets,
 	)
 	var i Event
 	err := row.Scan(
@@ -42,6 +44,8 @@ func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event
 		&i.AddedBy,
 		&i.VenueID,
 		&i.EventDate,
+		&i.TotalTickets,
+		&i.AvailableTickets,
 		&i.CreatedAt,
 	)
 	return i, err
@@ -49,7 +53,7 @@ func (q *Queries) CreateEvent(ctx context.Context, arg CreateEventParams) (Event
 
 const getEventByID = `-- name: GetEventByID :one
 SELECT 
-    e.id, e.name, e.description, e.added_by, e.venue_id, e.event_date, e.created_at,
+    e.id, e.name, e.description, e.added_by, e.venue_id, e.event_date, e.total_tickets, e.available_tickets, e.created_at,
     v.id, v.name, v.location, v.capacity, v.added_by, v.created_at,
     JSON_AGG(
         JSON_BUILD_OBJECT(
@@ -70,9 +74,9 @@ SELECT
     ) AS tickets
 FROM events e
 INNER JOIN venues v ON v.id = e.venue_id
-INNER JOIN tickets t ON t.event_id = e.id
-INNER JOIN event_performers ep ON ep.event_id = e.id
-INNER JOIN performers p ON p.id = ep.performer_id
+LEFT JOIN tickets t ON t.event_id = e.id
+LEFT JOIN event_performers ep ON ep.event_id = e.id
+LEFT JOIN performers p ON p.id = ep.performer_id
 WHERE e.id = $1
 GROUP BY e.id, t.id, v.id
 `
@@ -94,6 +98,8 @@ func (q *Queries) GetEventByID(ctx context.Context, id uuid.UUID) (GetEventByIDR
 		&i.Event.AddedBy,
 		&i.Event.VenueID,
 		&i.Event.EventDate,
+		&i.Event.TotalTickets,
+		&i.Event.AvailableTickets,
 		&i.Event.CreatedAt,
 		&i.Venue.ID,
 		&i.Venue.Name,
@@ -108,7 +114,7 @@ func (q *Queries) GetEventByID(ctx context.Context, id uuid.UUID) (GetEventByIDR
 }
 
 const listEvent = `-- name: ListEvent :many
-SELECT id, name, description, added_by, venue_id, event_date, created_at FROM events
+SELECT id, name, description, added_by, venue_id, event_date, total_tickets, available_tickets, created_at FROM events
 `
 
 func (q *Queries) ListEvent(ctx context.Context) ([]Event, error) {
@@ -127,6 +133,8 @@ func (q *Queries) ListEvent(ctx context.Context) ([]Event, error) {
 			&i.AddedBy,
 			&i.VenueID,
 			&i.EventDate,
+			&i.TotalTickets,
+			&i.AvailableTickets,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -140,7 +148,7 @@ func (q *Queries) ListEvent(ctx context.Context) ([]Event, error) {
 }
 
 const searchEvents = `-- name: SearchEvents :many
-SELECT id, name, description, added_by, venue_id, event_date, created_at
+SELECT id, name, description, added_by, venue_id, event_date, total_tickets, available_tickets, created_at
 FROM events
 WHERE (name ILIKE '%' || $1 || '%' OR description ILIKE '%' || $1 || '%')
   AND event_date BETWEEN $2 AND $3
@@ -179,6 +187,8 @@ func (q *Queries) SearchEvents(ctx context.Context, arg SearchEventsParams) ([]E
 			&i.AddedBy,
 			&i.VenueID,
 			&i.EventDate,
+			&i.TotalTickets,
+			&i.AvailableTickets,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err

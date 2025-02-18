@@ -55,14 +55,14 @@ func (eh *EventHandler) ListEvent(c fiber.Ctx) error {
 }
 
 func (eh *EventHandler) GetEventByID(c fiber.Ctx) error {
-	id := c.Params("id")
+	param := c.Params("id")
 
-	user_id, err := uuid.Parse(id)
+	id, err := uuid.Parse(param)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
 	}
 
-	event, err := eh.EventService.GetEventByID(context.Background(), user_id)
+	event, err := eh.EventService.GetEventByID(context.Background(), id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(common.NewErrorResponse(err.Error()))
 	}

@@ -58,3 +58,24 @@ func (q *Queries) GetAvailableTickets(ctx context.Context, id uuid.UUID) (int32,
 	err := row.Scan(&available_tickets)
 	return available_tickets, err
 }
+
+const getRemainingTickets = `-- name: GetRemainingTickets :one
+SELECT 
+    t.available_tickets AS ticket_available,
+    e.available_tickets AS event_available
+FROM tickets t
+JOIN events e ON e.id = t.event_id
+WHERE t.id = $1
+`
+
+type GetRemainingTicketsRow struct {
+	TicketAvailable int32 `json:"ticket_available"`
+	EventAvailable  int32 `json:"event_available"`
+}
+
+func (q *Queries) GetRemainingTickets(ctx context.Context, id uuid.UUID) (GetRemainingTicketsRow, error) {
+	row := q.db.QueryRow(ctx, getRemainingTickets, id)
+	var i GetRemainingTicketsRow
+	err := row.Scan(&i.TicketAvailable, &i.EventAvailable)
+	return i, err
+}

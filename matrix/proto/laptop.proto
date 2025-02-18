@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/protobuf/timestamp.proto";
+import "keyboard.proto";
+import "memory.proto";
+import "processor.proto";
+import "screen.proto";
+import "stroage.proto";
+
+message Laptop {
+  string id = 1;
+  string brand = 2;
+  string name = 3;
+  double price = 4;
+  uint32 released_year = 5;
+  CPU cpu = 6;
+  Memory ram = 7;
+  Screen screen = 8;
+  Keyboard keyboard = 9;
+  repeated GPU gpuses = 10;
+  repeated Stroage stroages = 11;
+
+  oneof weigth {
+    double weigth_kg = 12;
+    double weith_lb = 13;
+  }
+  google.protobuf.Timestamp updated_at = 14; 
+}

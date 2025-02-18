@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package pb;
+
+enum Unit {
+  UNIT_UNSPECIFIED = 0;
+  UNIT_BIT = 1;
+  UNIT_BYTE = 2;
+  UNIT_KILLOBYTE = 3;
+  UNIT_MEGABYTE = 4;
+  UNIT_GIGABYTE = 5;
+  UNIT_TERABYTE = 6;
+}
+
+message Memory {
+  uint64 value = 1;
+  Unit unit = 2;
+}

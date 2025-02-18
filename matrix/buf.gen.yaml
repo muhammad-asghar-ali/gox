@@ -1,0 +1,24 @@
+version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: matrix/internal/pb
+
+plugins:
+  # go install github.com/golang/protobuf/protoc-gen-go@latest
+  - local: protoc-gen-go
+    include_imports: true
+    include_wkt: false
+    out: ./internal/pb
+    opt:
+      - paths=source_relative
+
+  # go install connectrpc.com/connect/cmd/protoc-gen-connect-go@latest
+  - local: protoc-gen-connect-go
+    include_imports: true
+    include_wkt: false
+    out: ./internal/pb
+    opt:
+      - paths=source_relative
+      - require_unimplemented_servers=false

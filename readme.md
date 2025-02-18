@@ -71,7 +71,17 @@ A Go-based server application.
 
 ### [matrix](./matrix)
 
-A matrix-related application, possibly dealing with mathematical operations or matrix manipulation.
+A computer systems management application, designed to simulate and manage various components of computer systems, including laptops, processors, memory, screens, keyboards, and storage devices. The system uses **gRPC** for communication and **Protocol Buffers (protobuf)** for defining data structures, enabling efficient and scalable management of hardware resources.
+
+- **cmd**: Main GO server.
+- **internal**:
+  - **fns**: Functions related to various management operations, such as generating random data for system components or other utility functions.
+  - **pb**: Protocol Buffers-related files defining the data structures and services for different system components like keyboards, memory, processors, and laptops.
+    - **pbconnect**: Logic for establishing connections and handling communication between different protocol buffer services.
+  - **serializer**: Logic for serializing and deserializing data, including support for JSON and file serialization.
+  - **services**: Service implementations for handling the business logic of managing system components like laptops, processors, and storage.
+  - **tmp**: Temporary or experimental code, used for testing new features or approaches.
+- **proto**: Protocol Buffers definitions for services such as laptop, memory, processor, and storage, which define how data is communicated between services.
 
 ### [mchkx](./mchkx)
 

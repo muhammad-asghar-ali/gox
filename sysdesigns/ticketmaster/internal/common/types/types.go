@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -60,3 +61,7 @@ type (
 		PageSize int32     `json:"page_size"`
 	}
 )
+
+func GenerateCacheKeyForSearchEvent() string {
+	return fmt.Sprintf("search_events:%s", uuid.NewString())
+}

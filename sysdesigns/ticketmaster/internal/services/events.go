@@ -73,7 +73,6 @@ func (es *EventService) GetEventByID(ctx context.Context, id uuid.UUID) (*types.
 func (es *EventService) SearchEvents(ctx context.Context, req types.SearchEvent) ([]entities.Event, error) {
 	args := conv.ConvertEventSearchParams(req)
 
-	// Execute the query
 	events, err := db.Queries().SearchEvents(ctx, args)
 	if err != nil {
 		return nil, err

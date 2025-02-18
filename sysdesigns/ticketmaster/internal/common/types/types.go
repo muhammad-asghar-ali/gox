@@ -53,7 +53,7 @@ type (
 
 type (
 	SearchEvent struct {
-		Keyword  string    `josn:"keyword"`
+		Keyword  string    `json:"keyword"`
 		Start    time.Time `json:"start_date"`
 		End      time.Time `json:"end_date"`
 		Page     int32     `json:"page"`

@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common"
-	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common/types"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/entities"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/services"
 )
@@ -72,10 +71,7 @@ func (eh *EventHandler) GetEventByID(c fiber.Ctx) error {
 }
 
 func (eh *EventHandler) SearchEvents(c fiber.Ctx) error {
-	req := types.SearchEvent{}
-	if err := c.Bind().JSON(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(common.NewErrorResponse(err.Error()))
-	}
+	req := parseSearchEventParams(c)
 
 	list, err := eh.EventService.SearchEvents(context.Background(), req)
 	if err != nil {

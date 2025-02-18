@@ -1,0 +1,24 @@
+version: "3"
+
+tasks:
+  sqlc:
+    desc: Generate Go code from SQL files
+    cmds:
+      - sqlc generate -f ./internal/db/sqlc.yml
+      - go run script/script.go
+
+  migrate:
+    desc: Run database migrations
+    cmds:
+      - go run ./internal/db/migrations
+
+  numeric-to-float:
+    desc: Fix SQLC-generated Go files on macOS
+    cmds:
+      - |
+        if [ -n "$(find ./internal/entities -type f -name '*.go')" ]; then
+          find ./internal/entities -type f -name "*.go" -exec sed -i '' 's/pgtype.Numeric/float64/g' {} +
+          find ./internal/entities -type f -name "*.go" -exec sed -i '' 's/\t/    /g' {} +
+        fi
+      - goimports -w ./internal/entities/*.go
+      - gofmt -w ./internal/entities/*.go

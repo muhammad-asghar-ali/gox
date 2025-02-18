@@ -1,0 +1,24 @@
+meta {
+  name: get booking by id
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:7001/api/bookings/df37c10e-60d1-40f5-a054-1d0bf067d61c
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk5NTgyNzYsInVzZXJfaWQiOiJkYTk4NDg5Yi02ZDA3LTQ1ZGQtODFiNy0zOWQ5M2I5YjhhZDQifQ.mupYPYx8GEuXDn1wOPdC-ijR_ktjdTglCRBY9wY-td4
+}
+
+body:json {
+  {
+    "ticket_id": "2dde67fb-ca33-4057-8959-53950ca54400",
+    "quantity": 2,
+    "total_price": 2000,
+    "status": "pending"
+  }
+}

@@ -1,12 +1,12 @@
 meta {
-  name: add performer to event
+  name: get booking by id
   type: http
-  seq: 1
+  seq: 6
 }
 
-post {
-  url: http://localhost:7001/api/events/add/performers
-  body: json
+get {
+  url: http://localhost:7001/api/bookings/df37c10e-60d1-40f5-a054-1d0bf067d61c
+  body: none
   auth: bearer
 }
 
@@ -16,7 +16,9 @@ auth:bearer {
 
 body:json {
   {
-    "event_id": "8305a64a-0070-4731-88db-4e2ce67a58ae",
-    "performer_id": "35bed903-11de-489d-b789-a2cc09c16534"
+    "ticket_id": "2dde67fb-ca33-4057-8959-53950ca54400",
+    "quantity": 2,
+    "total_price": 2000,
+    "status": "pending"
   }
 }

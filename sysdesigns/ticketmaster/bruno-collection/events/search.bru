@@ -1,13 +1,19 @@
 meta {
-  name: get events
+  name: search
   type: http
-  seq: 2
+  seq: 4
 }
 
 get {
-  url: http://localhost:7001/api/events
+  url: http://localhost:7001/api/events/search?start_date=2025-02-18&end_date=2025-02-19&keyword=future
   body: none
   auth: bearer
+}
+
+params:query {
+  start_date: 2025-02-18
+  end_date: 2025-02-19
+  keyword: future
 }
 
 auth:bearer {

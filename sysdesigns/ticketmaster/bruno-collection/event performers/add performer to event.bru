@@ -1,0 +1,22 @@
+meta {
+  name: add performer to event
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:7001/api/events/add/performers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk5NTgyNzYsInVzZXJfaWQiOiJkYTk4NDg5Yi02ZDA3LTQ1ZGQtODFiNy0zOWQ5M2I5YjhhZDQifQ.mupYPYx8GEuXDn1wOPdC-ijR_ktjdTglCRBY9wY-td4
+}
+
+body:json {
+  {
+    "event_id": "8305a64a-0070-4731-88db-4e2ce67a58ae",
+    "performer_id": "35bed903-11de-489d-b789-a2cc09c16534"
+  }
+}

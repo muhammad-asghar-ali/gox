@@ -1,0 +1,30 @@
+meta {
+  name: search
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:7001/api/events/search?start_date=2025-02-18&end_date=2025-02-19&keyword=future
+  body: none
+  auth: bearer
+}
+
+params:query {
+  start_date: 2025-02-18
+  end_date: 2025-02-19
+  keyword: future
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk5NTgyNzYsInVzZXJfaWQiOiJkYTk4NDg5Yi02ZDA3LTQ1ZGQtODFiNy0zOWQ5M2I5YjhhZDQifQ.mupYPYx8GEuXDn1wOPdC-ijR_ktjdTglCRBY9wY-td4
+}
+
+body:json {
+  {
+    "name": "Future",
+    "description": "future music",
+    "venue_id": "8070e466-f21e-4c50-90d6-a274ac44660a",
+    "event_date": "2025-02-20T09:05:48"
+  }
+}

@@ -26,9 +26,16 @@ type (
 		Jwt  string
 	}
 
+	Redis struct {
+		RedisAddr     string
+		RedisPassword string
+		RedisDB       int
+	}
+
 	Config struct {
 		Server   Server
 		Database Database
+		Redis    Redis
 	}
 )
 
@@ -53,6 +60,12 @@ func Load() *Config {
 			EnableSSL: strings.ToLower(os.Getenv("DATABASE_SSL")) == "true",
 		}
 
+		redis := Redis{
+			RedisAddr:     os.Getenv("REDIS_ADDR"),
+			RedisPassword: os.Getenv("REDIS_PASSWORD"),
+			RedisDB:       getRedisDB(),
+		}
+
 		server := Server{
 			Port: os.Getenv("PORT"),
 			Jwt:  os.Getenv("JWT_SECRET"),
@@ -61,6 +74,7 @@ func Load() *Config {
 		c = &Config{
 			Database: db,
 			Server:   server,
+			Redis:    redis,
 		}
 	})
 
@@ -118,4 +132,30 @@ func (c *Config) ConnectionURI() string {
 
 func (c *Config) GetJwtSecret() string {
 	return c.Server.Jwt
+}
+
+func getRedisDB() int {
+	db := os.Getenv("REDIS_DB")
+	if db == "" {
+		return 0
+	}
+
+	value, err := strconv.Atoi(db)
+	if err != nil {
+		log.Fatalf("Invalid REDIS_DB value: %v", err)
+	}
+
+	return value
+}
+
+func (c *Config) GetRedisAddr() string {
+	return c.Redis.RedisAddr
+}
+
+func (c *Config) GetRedisPassword() string {
+	return c.Redis.RedisPassword
+}
+
+func (c *Config) GetRedisDB() int {
+	return c.Redis.RedisDB
 }

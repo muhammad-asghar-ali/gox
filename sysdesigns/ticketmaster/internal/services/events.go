@@ -2,9 +2,13 @@ package services
 
 import (
 	"context"
+	"encoding/json"
+	"log"
+	"time"
 
 	"github.com/google/uuid"
 
+	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/config"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common/conv"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/common/types"
 	"github.com/muhammad-asghar-ali/gox/sysdesigns/ticketmaster/internal/db"
@@ -73,7 +77,31 @@ func (es *EventService) GetEventByID(ctx context.Context, id uuid.UUID) (*types.
 func (es *EventService) SearchEvents(ctx context.Context, req types.SearchEvent) ([]entities.Event, error) {
 	args := conv.ConvertEventSearchParams(req)
 
+	key := types.GenerateCacheKeyForSearchEvent()
+	rdb := config.GetRedisClient()
+
+	data, err := rdb.Get(ctx, key).Result()
+	if err == nil && data != "" {
+		cached := make([]entities.Event, 0)
+
+		err := json.Unmarshal([]byte(data), &cached)
+		if err == nil && len(cached) > 0 {
+			return cached, nil
+		}
+	}
+
+	log.Println("cache miss: query from database")
 	events, err := db.Queries().SearchEvents(ctx, args)
+	if err != nil {
+		return nil, err
+	}
+
+	json, err := json.Marshal(events)
+	if err != nil {
+		return nil, err
+	}
+
+	err = rdb.Set(ctx, key, json, 1000*time.Microsecond).Err()
 	if err != nil {
 		return nil, err
 	}

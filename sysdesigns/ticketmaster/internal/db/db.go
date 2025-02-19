@@ -57,3 +57,13 @@ func Queries() *entities.Queries {
 
 	return queries
 }
+
+func BeginTx(ctx context.Context) pgx.Tx {
+	conn := Get()
+	if conn == nil {
+		Connect()
+	}
+
+	tx, _ := conn.Begin(ctx)
+	return tx
+}

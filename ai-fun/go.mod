@@ -3,6 +3,11 @@ module ai-fun
 go 1.23.0
 
 require (
+	gitlab.com/tozd/go/errors v0.9.0
+	gitlab.com/tozd/go/fun v0.6.0
+)
+
+require (
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v1.0.0 // indirect
@@ -35,8 +40,6 @@ require (
 	github.com/skeema/knownhosts v1.2.2 // indirect
 	github.com/wk8/go-ordered-map/v2 v2.1.8 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect
-	gitlab.com/tozd/go/errors v0.9.0 // indirect
-	gitlab.com/tozd/go/fun v0.6.0 // indirect
 	gitlab.com/tozd/go/x v0.0.0-20240906084819-fda0a3bbba65 // indirect
 	gitlab.com/tozd/identifier v0.4.0 // indirect
 	golang.org/x/crypto v0.27.0 // indirect

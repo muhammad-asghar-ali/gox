@@ -1,0 +1,23 @@
+meta {
+  name: venue
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:7001/api/venues
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk5NTgxODksInVzZXJfaWQiOiJkYTk4NDg5Yi02ZDA3LTQ1ZGQtODFiNy0zOWQ5M2I5YjhhZDQifQ.11oEDHRLJA_nK6RPn_IO2wdrhNj-oBKZ3JJmeLrtkuE
+}
+
+body:json {
+  {
+    "name": "XYZ",
+    "location": "Model Town, Lahore",
+    "capacity": 500
+  }
+}

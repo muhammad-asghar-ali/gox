@@ -1,0 +1,24 @@
+meta {
+  name: get event by id
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:7001/api/events/1e1c95e7-f170-4073-a185-b11829c5c8e3
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mzk5NTgyNzYsInVzZXJfaWQiOiJkYTk4NDg5Yi02ZDA3LTQ1ZGQtODFiNy0zOWQ5M2I5YjhhZDQifQ.mupYPYx8GEuXDn1wOPdC-ijR_ktjdTglCRBY9wY-td4
+}
+
+body:json {
+  {
+    "name": "Future",
+    "description": "future music",
+    "venue_id": "8070e466-f21e-4c50-90d6-a274ac44660a",
+    "event_date": "2025-02-20T09:05:48"
+  }
+}
